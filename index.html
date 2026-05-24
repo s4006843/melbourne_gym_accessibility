@@ -77,7 +77,7 @@
         /* Legend panel - bottom LEFT */
         #legend {
             position: fixed;
-            bottom: 75px;
+            bottom: 28px;
             left: 14px;
             background: rgba(255,255,255,0.93);
             border-radius: 8px;
@@ -228,21 +228,22 @@
             padding: 5px 0;
         }
 
-        /* Stats box - always visible when in banner mode */
+        /* Stats box - redesigned as a square panel on the right */
         #stats-banner {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 62px;
-            background: rgba(20, 60, 120, 0.90);
+            bottom: 28px;
+            right: 14px;
+            width: 260px;
+            background: rgba(20, 60, 120, 0.92);
             color: white;
-            padding: 0 20px;
+            padding: 16px;
+            border-radius: 10px;
             z-index: 1500;
             display: flex;
-            align-items: center;
-            box-shadow: 0 -3px 12px rgba(0,0,0,0.3);
+            flex-direction: column;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.35);
             font-family: Arial, sans-serif;
+            backdrop-filter: blur(5px);
         }
         #stats-banner.hidden { display: none; }
 
@@ -251,65 +252,165 @@
             width: 100%;
             text-align: center;
             font-size: 14px;
-            opacity: 0.75;
+            opacity: 0.85;
             font-style: italic;
             letter-spacing: 0.3px;
+            padding: 20px 0;
+            line-height: 1.5;
         }
 
         /* Stats data state */
         #stats-data {
             display: none;
             width: 100%;
-            align-items: center;
-            gap: 14px;
+            flex-direction: column;
         }
         #stats-data.active { display: flex; }
-        #stats-suburb-name {
-            font-size: 14px;
-            font-weight: bold;
-            min-width: 120px;
-            max-width: 150px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            border-right: 1px solid rgba(255,255,255,0.3);
-            padding-right: 14px;
-            flex-shrink: 0;
-        }
-        #stats-cards {
+        #stats-header-row {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.25);
+        }
+        #stats-suburb-name {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.2;
+            padding-right: 10px;
+        }
+        #stats-banner-close {
+            cursor: pointer;
+            font-size: 24px;
+            opacity: 0.7;
+            line-height: 1;
+        }
+        #stats-banner-close:hover { opacity: 1; }
+        
+        #stats-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
-            flex: 1;
-            flex-wrap: wrap;
         }
         .stat-card {
             background: rgba(255,255,255,0.15);
             border-radius: 6px;
-            padding: 4px 12px;
+            padding: 10px 8px;
             text-align: center;
-            min-width: 70px;
         }
         .stat-label {
-            font-size: 9px;
-            opacity: 0.75;
+            font-size: 10px;
+            opacity: 0.8;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
-            white-space: nowrap;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
         .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Data Modal CSS */
+        #data-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 3000;
+            font-family: Arial, sans-serif;
+            backdrop-filter: blur(3px);
+        }
+        #data-modal-content {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            width: 85%;
+            height: 85%;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.4);
+        }
+        #data-modal-header {
+            background: #143c78;
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #data-modal-header h2 { margin: 0; font-size: 18px; letter-spacing: 0.5px; }
+        #modal-close-btn { font-size: 30px; cursor: pointer; line-height: 1; opacity: 0.8; }
+        #modal-close-btn:hover { opacity: 1; }
+        .tab-buttons {
+            display: flex;
+            background: #f4f4f4;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
             font-size: 14px;
             font-weight: bold;
-            margin-top: 1px;
+            color: #666;
+            outline: none;
+            transition: 0.2s;
         }
-        #stats-banner-close {
+        .tab-btn:hover { background: #eaeaea; color: #333; }
+        .tab-btn.active {
+            background: #fff;
+            color: #143c78;
+            border-bottom: 3px solid #143c78;
+        }
+        .tab-content-container {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            background: #fff;
+        }
+        .tab-content {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+        }
+        .tab-content.active { display: block; }
+        .table-scroll {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .data-table th, .data-table td {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: left;
+        }
+        .data-table th {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
             cursor: pointer;
-            font-size: 22px;
-            opacity: 0.65;
-            flex-shrink: 0;
-            line-height: 1;
-            padding: 2px 4px;
+            user-select: none;
+            color: #333;
+            font-weight: bold;
+            box-shadow: 0 1px 0 #ddd;
+            z-index: 10;
         }
-        #stats-banner-close:hover { opacity: 1; }
+        .data-table th:hover { background: #eef2f5; }
+        .data-table th span { font-size: 10px; margin-left: 5px; color: #888; }
+        .data-table tr:nth-child(even) { background: #fafbfc; }
+        .data-table tr:hover { background: #f0f7ff; }
+
         </style>
         <title>Melbourne Gym Accessibility Index</title>
     </head>
@@ -380,13 +481,19 @@
                 <span class="toggle-icon">📊</span>
                 Stats Panel Mode
             </label>
+
+            <!-- Open Data Table Button -->
+            <button id="btn-open-table" style="margin-top: 15px; width: 100%; padding: 10px; background: #143c78; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🗃️ View Attribute Tables</button>
         </div>
 
-        <!-- Stats Box - always visible in banner mode -->
+        <!-- Stats Box - Bottom Right panel -->
         <div id="stats-banner">
             <div id="stats-placeholder">📍 Select a suburb on the map to view its statistics</div>
             <div id="stats-data">
-                <div id="stats-suburb-name">—</div>
+                <div id="stats-header-row">
+                    <div id="stats-suburb-name">—</div>
+                    <div id="stats-banner-close">×</div>
+                </div>
                 <div id="stats-cards">
                     <div class="stat-card">
                         <div class="stat-label">Area (km²)</div>
@@ -413,7 +520,32 @@
                         <div class="stat-value" id="stat-gai">—</div>
                     </div>
                 </div>
-                <div id="stats-banner-close">×</div>
+            </div>
+        </div>
+
+        <!-- Attribute Table Modal -->
+        <div id="data-modal">
+            <div id="data-modal-content">
+                <div id="data-modal-header">
+                    <h2>Layer Attribute Data</h2>
+                    <span id="modal-close-btn">&times;</span>
+                </div>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="tab-suburbs">Suburbs (GAI)</button>
+                    <button class="tab-btn" data-tab="tab-gyms">Gyms</button>
+                    <button class="tab-btn" data-tab="tab-ptv">PTV Stops</button>
+                </div>
+                <div class="tab-content-container">
+                    <div id="tab-suburbs" class="tab-content active">
+                        <div class="table-scroll"><table id="table-suburbs" class="data-table"></table></div>
+                    </div>
+                    <div id="tab-gyms" class="tab-content">
+                        <div class="table-scroll"><table id="table-gyms" class="data-table"></table></div>
+                    </div>
+                    <div id="tab-ptv" class="tab-content">
+                        <div class="table-scroll"><table id="table-ptv" class="data-table"></table></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -565,10 +697,8 @@
                     bannerMode = this.checked;
                     if (bannerMode) {
                         document.getElementById('stats-banner').classList.remove('hidden');
-                        document.getElementById('legend').style.bottom = '75px';
                     } else {
                         document.getElementById('stats-banner').classList.add('hidden');
-                        document.getElementById('legend').style.bottom = '28px';
                         document.getElementById('custom-popup').style.display = 'none';
                     }
                 });
@@ -648,8 +778,124 @@
                     });
                 }
 
+                // ==========================================
+                // ATTRIBUTE TABLE MODAL LOGIC
+                // ==========================================
+
+                // Utility to extract unclustered properties from layers
+                function extractLayerData(layer) {
+                    if (!layer) return [];
+                    let features = layer.getSource().getFeatures();
+                    let dataList = [];
+                    
+                    features.forEach(f => {
+                        if (f.get('features')) {
+                            // It's a cluster, loop inner features
+                            let subFeatures = f.get('features');
+                            subFeatures.forEach(sf => dataList.push(sf.getProperties()));
+                        } else {
+                            dataList.push(f.getProperties());
+                        }
+                    });
+                    return dataList;
+                }
+
+                // Build HTML Table
+                function buildTableHTML(data) {
+                    if (!data || data.length === 0) return '<tr><td style="padding:15px; text-align:center;">No data available.</td></tr>';
+                    
+                    // Get all unique columns excluding geometry
+                    let keys = new Set();
+                    data.forEach(item => {
+                        Object.keys(item).forEach(k => {
+                            if (k !== 'geometry' && k !== 'features') keys.add(k);
+                        });
+                    });
+                    let cols = Array.from(keys);
+                    
+                    let html = '<thead><tr>';
+                    cols.forEach((col, index) => {
+                        html += `<th onclick="sortTable(this, ${index})">${col} <span></span></th>`;
+                    });
+                    html += '</tr></thead><tbody>';
+                    
+                    data.forEach(item => {
+                        html += '<tr>';
+                        cols.forEach(col => {
+                            let val = item[col];
+                            if (val === null || val === undefined) val = '';
+                            else if (typeof val === 'number') val = (val % 1 !== 0) ? val.toFixed(4) : val; // Format decimals
+                            html += `<td>${val}</td>`;
+                        });
+                        html += '</tr>';
+                    });
+                    html += '</tbody>';
+                    return html;
+                }
+
+                // Open Modal & Populate Data
+                document.getElementById('btn-open-table').addEventListener('click', function() {
+                    document.getElementById('table-suburbs').innerHTML = buildTableHTML(extractLayerData(lyr_gyms_ptv_sa2_join_v6_withnorms_1));
+                    document.getElementById('table-gyms').innerHTML = buildTableHTML(extractLayerData(lyr_gym_points_v2_clipped_4));
+                    document.getElementById('table-ptv').innerHTML = buildTableHTML(extractLayerData(lyr_ptv_stops_clipped_3));
+                    document.getElementById('data-modal').style.display = 'block';
+                });
+
+                // Close Modal
+                document.getElementById('modal-close-btn').addEventListener('click', function() {
+                    document.getElementById('data-modal').style.display = 'none';
+                });
+
+                // Tab Switching
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        this.classList.add('active');
+                        document.getElementById(this.getAttribute('data-tab')).classList.add('active');
+                    });
+                });
+
             }, 600);
         });
+
+        // Global Table Sorting Logic
+        window.sortTable = function(th, colIndex) {
+            let table = th.closest('table');
+            let tbody = table.querySelector('tbody');
+            if (!tbody) return;
+            
+            let rows = Array.from(tbody.querySelectorAll('tr'));
+            let isAsc = th.classList.contains('asc');
+            
+            // Reset all headers
+            table.querySelectorAll('th').forEach(h => {
+                h.classList.remove('asc', 'desc');
+                h.querySelector('span').innerHTML = '';
+            });
+
+            // Set current sort direction
+            th.classList.toggle('asc', !isAsc);
+            th.classList.toggle('desc', isAsc);
+            th.querySelector('span').innerHTML = isAsc ? '▼' : '▲';
+
+            rows.sort((a, b) => {
+                let cellA = a.children[colIndex].textContent.trim();
+                let cellB = b.children[colIndex].textContent.trim();
+                
+                let numA = parseFloat(cellA);
+                let numB = parseFloat(cellB);
+                
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return isAsc ? numB - numA : numA - numB;
+                } else {
+                    return isAsc ? cellB.localeCompare(cellA) : cellA.localeCompare(cellB);
+                }
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        };
 
         function showPopup(title, rows, pixel) {
             var popup = document.getElementById('custom-popup');
