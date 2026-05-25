@@ -12,149 +12,560 @@
         <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
         <link rel="stylesheet" href="./resources/qgis2web.css">
         <style>
-        html, body, #map { width:100%; height:100%; padding:0; margin:0; background-color: #ffffff; font-family: Arial, sans-serif; }
-        .ol-control > * { background-color: #f8f8f8!important; color: #444444!important; border-radius: 0px; }
-        .ol-control > *:focus, .ol-control > *:hover { background-color: rgba(248,248,248,0.7)!important; }
-        .ol-control { background-color: rgba(255,255,255,.4)!important; padding: 2px!important; }
-        #popup, .layer-switcher { display: none !important; }
+        html, body { background-color: #ffffff; }
+        .ol-control > * {
+            background-color: #f8f8f8!important;
+            color: #444444!important;
+            border-radius: 0px;
+        }
+        .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
+            color: #444444!important;
+        }
+        .search-layer-input-search { background-color: #f8f8f8!important; }
+        .ol-control > *:focus, .ol-control > *:hover {
+            background-color: rgba(248,248,248,0.7)!important;
+        }
+        .ol-control {
+            background-color: rgba(255,255,255,.4)!important;
+            padding: 2px!important;
+        }
+        html, body, #map { width:100%; height:100%; padding:0; margin:0; }
 
-        /* Overlays */
-        #map-title { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); background: rgba(20, 60, 120, 0.82); color: white; padding: 10px 26px; border-radius: 8px; font-size: 17px; font-weight: bold; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.35); }
-        #cc-attribution { position: fixed; top: 14px; right: 14px; background: rgba(255,255,255,0.90); padding: 6px 10px; border-radius: 6px; font-size: 10px; z-index: 1000; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
-        #cc-attribution a { color: #333; text-decoration: none; } #cc-attribution img { height: 15px; vertical-align: middle; display: block; margin: 0 auto 2px auto; }
+        /* Hide default qgis2web popup and layer switcher */
+        #popup { display: none !important; }
+        .layer-switcher { display: none !important; }
+
+        /* Title banner */
+        #map-title {
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 60, 120, 0.82);
+            color: white;
+            padding: 10px 26px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+            white-space: nowrap;
+            letter-spacing: 0.4px;
+        }
+
+        /* CC Attribution - top right */
+        #cc-attribution {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            background: rgba(255,255,255,0.90);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            color: #444;
+            line-height: 1.6;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        #cc-attribution a { color: #333; text-decoration: none; }
+        #cc-attribution a:hover { text-decoration: underline; }
+        #cc-attribution img { height: 15px; vertical-align: middle; display: block; margin: 0 auto 2px auto; }
+
+        /* Legend panel - bottom LEFT */
+        #legend {
+            position: fixed;
+            bottom: 28px;
+            left: 14px;
+            background: rgba(255,255,255,0.93);
+            border-radius: 8px;
+            padding: 14px 16px;
+            z-index: 1000;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            min-width: 215px;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+            transition: bottom 0.3s ease;
+        }
+        #legend h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #222;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 7px;
+        }
+        .legend-section-title {
+            font-weight: bold;
+            color: #555;
+            margin: 10px 0 5px 0;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 4px 0;
+            color: #333;
+            font-size: 12px;
+        }
+        .legend-item img {
+            margin-right: 8px;
+            width: 22px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+        .layer-toggle {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+            cursor: pointer;
+            color: #333;
+            font-size: 12px;
+            user-select: none;
+        }
+        .layer-toggle input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+        }
+        .layer-toggle img {
+            margin-right: 7px;
+            width: 20px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+        .toggle-icon {
+            display: inline-block;
+            width: 20px;
+            height: 14px;
+            margin-right: 7px;
+            flex-shrink: 0;
+            text-align: center;
+            font-size: 11px;
+            line-height: 14px;
+        }
+        .opacity-row {
+            display: flex;
+            align-items: center;
+            margin: 6px 0 2px 0;
+            gap: 8px;
+            font-size: 11px;
+            color: #666;
+        }
+        .opacity-row input[type="range"] {
+            flex: 1;
+            cursor: pointer;
+            accent-color: rgba(20,60,120,0.8);
+        }
+        .opacity-value {
+            min-width: 30px;
+            text-align: right;
+            font-size: 11px;
+            color: #888;
+        }
+        .legend-divider {
+            border: none;
+            border-top: 1px solid #e8e8e8;
+            margin: 8px 0;
+        }
+
+        /* Custom popup */
+        #custom-popup {
+            display: none;
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+            min-width: 230px;
+            max-width: 290px;
+            z-index: 2000;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+        #custom-popup-header {
+            background: rgba(20, 60, 120, 0.88);
+            color: white;
+            padding: 10px 14px;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #custom-popup-close {
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            opacity: 0.75;
+            margin-left: 10px;
+        }
+        #custom-popup-close:hover { opacity: 1; }
+        #custom-popup-body { padding: 10px 14px 12px 14px; }
+        #custom-popup-body table { width: 100%; border-collapse: collapse; }
+        #custom-popup-body tr { border-bottom: 1px solid #f0f0f0; }
+        #custom-popup-body tr:last-child { border-bottom: none; }
+        #custom-popup-body th {
+            text-align: left;
+            color: #666;
+            font-weight: normal;
+            padding: 5px 0;
+            width: 55%;
+        }
+        #custom-popup-body td {
+            text-align: right;
+            font-weight: bold;
+            color: #222;
+            padding: 5px 0;
+        }
+
+        /* Stats box - redesigned as a square panel on the right */
+        #stats-banner {
+            position: fixed;
+            bottom: 28px;
+            right: 14px;
+            width: 260px;
+            background: rgba(20, 60, 120, 0.92);
+            color: white;
+            padding: 16px;
+            border-radius: 10px;
+            z-index: 1500;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.35);
+            font-family: Arial, sans-serif;
+            backdrop-filter: blur(5px);
+        }
+        #stats-banner.hidden { display: none; }
+
+        /* Placeholder state */
+        #stats-placeholder {
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.85;
+            font-style: italic;
+            letter-spacing: 0.3px;
+            padding: 20px 0;
+            line-height: 1.5;
+        }
+
+        /* Stats data state */
+        #stats-data {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+        }
+        #stats-data.active { display: flex; }
+        #stats-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.25);
+        }
+        #stats-suburb-name {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.2;
+            padding-right: 10px;
+        }
+        #stats-banner-close {
+            cursor: pointer;
+            font-size: 24px;
+            opacity: 0.7;
+            line-height: 1;
+        }
+        #stats-banner-close:hover { opacity: 1; }
         
-        /* Legend */
-        #legend { position: fixed; bottom: 28px; left: 14px; background: rgba(255,255,255,0.93); border-radius: 8px; padding: 14px 16px; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.25); font-size: 13px; min-width: 215px; max-height: calc(100vh - 160px); overflow-y: auto; }
-        #legend h3 { margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 7px; }
-        .legend-section-title { font-weight: bold; color: #555; margin: 10px 0 5px 0; font-size: 10px; text-transform: uppercase; }
-        .legend-item, .layer-toggle { display: flex; align-items: center; margin: 4px 0; font-size: 12px; cursor: pointer; }
-        .legend-item img, .layer-toggle img, .layer-toggle input { margin-right: 8px; width: 13px; height: 13px; flex-shrink: 0; }
-        .layer-toggle img { width: 20px; height: 14px; }
-        .toggle-icon { display: inline-block; width: 20px; margin-right: 7px; text-align: center; font-size: 11px; }
-        .opacity-row { display: flex; align-items: center; margin: 6px 0; gap: 8px; font-size: 11px; }
-        .opacity-row input { flex: 1; accent-color: #143c78; } .legend-divider { border-top: 1px solid #e8e8e8; margin: 8px 0; border-bottom: none; }
+        #stats-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 10px 8px;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 10px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
 
-        /* Stats & Popups */
-        #custom-popup { display: none; position: absolute; background: white; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.35); min-width: 230px; z-index: 2000; font-size: 13px; overflow: hidden; }
-        #custom-popup-header { background: #143c78; color: white; padding: 10px 14px; font-weight: bold; display: flex; justify-content: space-between; }
-        #custom-popup-close { cursor: pointer; } #custom-popup-body { padding: 10px; }
-        #custom-popup-body table { width: 100%; border-collapse: collapse; } #custom-popup-body th { text-align: left; color: #666; width: 55%; font-weight: normal; } #custom-popup-body td { text-align: right; font-weight: bold; }
-        #stats-banner { position: fixed; bottom: 28px; right: 14px; width: 260px; background: rgba(20, 60, 120, 0.92); color: white; padding: 16px; border-radius: 10px; z-index: 1500; display: flex; flex-direction: column; box-shadow: 0 5px 20px rgba(0,0,0,0.35); backdrop-filter: blur(5px); }
-        #stats-placeholder { text-align: center; font-size: 14px; opacity: 0.85; padding: 20px 0; }
-        #stats-data { display: none; flex-direction: column; } #stats-data.active { display: flex; }
-        #stats-header-row { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.25); padding-bottom: 10px; }
-        #stats-suburb-name { font-size: 16px; font-weight: bold; } #stats-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stat-card { background: rgba(255,255,255,0.15); border-radius: 6px; padding: 10px 8px; text-align: center; }
-        .stat-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; } .stat-value { font-size: 16px; font-weight: bold; }
+        /* Data Modal CSS */
+        #data-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 3000;
+            font-family: Arial, sans-serif;
+            backdrop-filter: blur(3px);
+        }
+        #data-modal-content {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            width: 85%;
+            height: 85%;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.4);
+        }
+        #data-modal-header {
+            background: #143c78;
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #data-modal-header h2 { margin: 0; font-size: 18px; letter-spacing: 0.5px; }
+        #modal-close-btn { font-size: 30px; cursor: pointer; line-height: 1; opacity: 0.8; }
+        #modal-close-btn:hover { opacity: 1; }
+        .tab-buttons {
+            display: flex;
+            background: #f4f4f4;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            outline: none;
+            transition: 0.2s;
+        }
+        .tab-btn:hover { background: #eaeaea; color: #333; }
+        .tab-btn.active {
+            background: #fff;
+            color: #143c78;
+            border-bottom: 3px solid #143c78;
+        }
+        .tab-content-container {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            background: #fff;
+        }
+        .tab-content {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+        }
+        .tab-content.active { display: block; }
+        .table-scroll {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .data-table th, .data-table td {
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: left;
+        }
+        .data-table th {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+            cursor: pointer;
+            user-select: none;
+            color: #333;
+            font-weight: bold;
+            box-shadow: 0 1px 0 #ddd;
+            z-index: 10;
+        }
+        .data-table th:hover { background: #eef2f5; }
+        .data-table th span { font-size: 10px; margin-left: 5px; color: #888; }
+        .data-table tr:nth-child(even) { background: #fafbfc; }
+        .data-table tr:hover { background: #f0f7ff; }
 
-        /* Modal */
-        #data-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 3000; backdrop-filter: blur(3px); }
-        #data-modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; width: 85%; height: 85%; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; }
-        #data-modal-header { background: #143c78; color: white; padding: 16px 20px; display: flex; justify-content: space-between; }
-        .tab-buttons { display: flex; background: #f4f4f4; border-bottom: 1px solid #ddd; } .tab-btn { padding: 12px 24px; border: none; background: none; cursor: pointer; font-weight: bold; color: #666; } .tab-btn.active { background: #fff; color: #143c78; border-bottom: 3px solid #143c78; }
-        .tab-content { display: none; flex: 1; overflow: auto; } .tab-content.active { display: block; height: 100%; }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; } .data-table th, .data-table td { padding: 10px; border: 1px solid #e0e0e0; text-align: left; } .data-table th { background: #f8f9fa; position: sticky; top: 0; cursor: pointer; }
-
-        /* Floating Chatbot */
-        #chat-fab { position: fixed; bottom: 28px; right: 290px; background: #143c78; color: white; border: none; border-radius: 25px; padding: 12px 20px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 2500; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        #chat-fab:hover { background: #0e2a55; transform: scale(1.05); }
-        #chat-window { position: fixed; bottom: 80px; right: 290px; width: 330px; height: 450px; background: #fff; border-radius: 10px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); z-index: 2500; display: none; flex-direction: column; overflow: hidden; border: 1px solid #ddd; }
-        .chat-header { background: #143c78; color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-header h2 { font-size: 14px; margin: 0; } .chat-close { cursor: pointer; font-size: 20px; line-height: 1; }
-        .messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; }
-        .msg { padding: 10px 14px; border-radius: 12px; font-size: 12.5px; line-height: 1.5; max-width: 85%; }
-        .msg.bot { align-self: flex-start; background: #e2e8f0; color: #1e293b; border-bottom-left-radius: 3px; }
-        .msg.user { align-self: flex-end; background: #143c78; color: white; border-bottom-right-radius: 3px; }
-        .chat-chips { padding: 0 15px 10px; background: #f9f9f9; } .chat-chips span { font-size: 10px; color: #666; font-weight: bold; text-transform: uppercase; }
-        .chip { display: block; width: 100%; text-align: left; background: #fff; border: 1px solid #ccc; border-radius: 5px; font-size: 11px; padding: 7px; margin-top: 5px; cursor: pointer; color: #333; } .chip:hover { border-color: #143c78; background: #f0f4f8; }
-        .chat-input-row { display: flex; padding: 10px; background: #fff; border-top: 1px solid #ddd; }
-        .chat-input-row input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 20px; outline: none; font-size: 12px; }
-        .chat-input-row button { background: #143c78; color: white; border: none; border-radius: 50%; width: 34px; height: 34px; margin-left: 8px; cursor: pointer; font-weight: bold; }
         </style>
         <title>Melbourne Gym Accessibility Index</title>
     </head>
     <body>
 
-        <!-- Overlays -->
+        <!-- Title -->
         <div id="map-title">🏋️ Melbourne Gym Accessibility Index</div>
+
+        <!-- CC Attribution top right -->
         <div id="cc-attribution">
-            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"><img src="https://licensebuttons.net/l/by/4.0/88x31.png" alt="CC"></a>
-            <a href="#">Jacob Quadrio</a> &mdash; CC BY 4.0
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">
+                <img src="https://licensebuttons.net/l/by/4.0/88x31.png" alt="CC BY 4.0 License">
+            </a>
+            <a href="https://s4006843.github.io/melbourne_gym_accessibility/" target="_blank" rel="noopener">Jacob Quadrio</a>
+            &mdash;
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
         </div>
 
-        <!-- Legend -->
+        <!-- Legend - bottom left -->
         <div id="legend">
             <h3>Map Legend</h3>
+
             <div class="legend-section-title">Gym Accessibility Index</div>
             <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_0.png"> Very Low (0 – 0.06)</div>
             <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_1.png"> Low (0.06 – 0.14)</div>
             <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_2.png"> Moderate (0.14 – 0.19)</div>
             <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_3.png"> High (0.19 – 0.32)</div>
             <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_4.png"> Very High (0.32 – 0.71)</div>
-            <div class="opacity-row"><span>Opacity</span><input type="range" id="gai-opacity" min="0" max="1" step="0.05" value="1"><span id="gai-opacity-val">100%</span></div>
-            <hr class="legend-divider"><div class="legend-section-title">Layers</div>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-gyms" checked><img src="styles/legend/gym_points_v2_clipped_4.png"> Gym Locations</label>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-ptv" checked><img src="styles/legend/ptv_stops_clipped_3.png"> PTV Stops</label>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-labels" checked><span class="toggle-icon">Aa</span> Suburb Labels</label>
-            <hr class="legend-divider"><div class="legend-section-title">Options</div>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-cluster" checked><span class="toggle-icon">⬤</span> Cluster Points</label>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-banner" checked><span class="toggle-icon">📊</span> Stats Panel</label>
-            <button id="btn-open-table" style="margin-top:10px;width:100%;padding:8px;background:#143c78;color:white;border:none;border-radius:4px;cursor:pointer;">🗃️ Data Tables</button>
+            <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_5.png"> No Data</div>
+            <div class="opacity-row">
+                <span>Opacity</span>
+                <input type="range" id="gai-opacity" min="0" max="1" step="0.05" value="1">
+                <span class="opacity-value" id="gai-opacity-val">100%</span>
+            </div>
+
+            <hr class="legend-divider">
+            <div class="legend-section-title">Layers</div>
+            <label class="layer-toggle">
+                <input type="checkbox" id="toggle-gyms" checked>
+                <img src="styles/legend/gym_points_v2_clipped_4.png">
+                Gym Locations
+            </label>
+            <label class="layer-toggle">
+                <input type="checkbox" id="toggle-ptv" checked>
+                <img src="styles/legend/ptv_stops_clipped_3.png">
+                Public Transport Stops
+            </label>
+            <label class="layer-toggle">
+                <input type="checkbox" id="toggle-labels" checked>
+                <span class="toggle-icon" style="color:#555;font-weight:bold;">Aa</span>
+                Suburb Labels
+            </label>
+            <label class="layer-toggle">
+                <input type="checkbox" id="toggle-basemap" checked>
+                <span class="toggle-icon" style="background:#c8dea8;border:1px solid #aaa;border-radius:2px;"></span>
+                OSM Basemap
+            </label>
+
+            <hr class="legend-divider">
+            <div class="legend-section-title">Display Options</div>
+            <label class="layer-toggle">
+                <input type="checkbox" id="toggle-cluster" checked>
+                <span class="toggle-icon">⬤</span>
+                Cluster Points
+            </label>
+            <label class="layer-toggle">
+                <input type="checkbox" id="toggle-banner" checked>
+                <span class="toggle-icon">📊</span>
+                Stats Panel Mode
+            </label>
+
+            <!-- Open Data Table Button -->
+            <button id="btn-open-table" style="margin-top: 15px; width: 100%; padding: 10px; background: #143c78; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">🗃️ View Attribute Tables</button>
         </div>
 
-        <!-- Stats Panel -->
+        <!-- Stats Box - Bottom Right panel -->
         <div id="stats-banner">
-            <div id="stats-placeholder">📍 Select a suburb on the map to view statistics</div>
+            <div id="stats-placeholder">📍 Select a suburb on the map to view its statistics</div>
             <div id="stats-data">
-                <div id="stats-header-row"><div id="stats-suburb-name">—</div><div id="stats-banner-close" style="cursor:pointer;">×</div></div>
+                <div id="stats-header-row">
+                    <div id="stats-suburb-name">—</div>
+                    <div id="stats-banner-close">×</div>
+                </div>
                 <div id="stats-cards">
-                    <div class="stat-card"><div class="stat-label">Area (km²)</div><div class="stat-value" id="stat-area">—</div></div>
-                    <div class="stat-card"><div class="stat-label">Population</div><div class="stat-value" id="stat-pop">—</div></div>
-                    <div class="stat-card"><div class="stat-label">SEIFA Score</div><div class="stat-value" id="stat-seifa">—</div></div>
-                    <div class="stat-card"><div class="stat-label">PTV Stops</div><div class="stat-value" id="stat-ptv">—</div></div>
-                    <div class="stat-card"><div class="stat-label">Gym Count</div><div class="stat-value" id="stat-gyms">—</div></div>
-                    <div class="stat-card"><div class="stat-label">GAI Score</div><div class="stat-value" id="stat-gai">—</div></div>
+                    <div class="stat-card">
+                        <div class="stat-label">Area (km²)</div>
+                        <div class="stat-value" id="stat-area">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Population</div>
+                        <div class="stat-value" id="stat-pop">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">SEIFA Score</div>
+                        <div class="stat-value" id="stat-seifa">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">PTV Stops</div>
+                        <div class="stat-value" id="stat-ptv">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Gym Count</div>
+                        <div class="stat-value" id="stat-gyms">—</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">GAI Score</div>
+                        <div class="stat-value" id="stat-gai">—</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Chatbot Floating UI -->
-        <button id="chat-fab" onclick="toggleChat()">💬 Ask AI</button>
-        <div id="chat-window">
-            <div class="chat-header"><h2>🤖 Index Assistant</h2><span class="chat-close" onclick="toggleChat()">×</span></div>
-            <div class="messages" id="chat-msgs">
-                <div class="msg bot">Hi! I'm an AI assistant trained on the methodology of this Gym Accessibility map. Ask me anything!</div>
-            </div>
-            <div class="chat-chips" id="chat-chips">
-                <span>Try asking:</span>
-                <button class="chip" onclick="sendChip(this)">What does SEIFA mean?</button>
-                <button class="chip" onclick="sendChip(this)">Which suburb has the best gym access?</button>
-                <button class="chip" onclick="sendChip(this)">How is the GAI score calculated?</button>
-            </div>
-            <div class="chat-input-row">
-                <input type="text" id="chat-in" placeholder="Type a question..." onkeydown="if(event.key==='Enter') sendChat()">
-                <button onclick="sendChat()">➤</button>
-            </div>
-        </div>
-
-        <!-- Data Modal -->
+        <!-- Attribute Table Modal -->
         <div id="data-modal">
             <div id="data-modal-content">
-                <div id="data-modal-header"><h2>Layer Data</h2><span id="modal-close-btn" style="cursor:pointer;font-size:24px;">&times;</span></div>
-                <div class="tab-buttons"><button class="tab-btn active" data-tab="tab-suburbs">Suburbs (GAI)</button><button class="tab-btn" data-tab="tab-gyms">Gyms</button><button class="tab-btn" data-tab="tab-ptv">PTV Stops</button></div>
-                <div style="flex:1;overflow:hidden;position:relative;background:#fff;">
-                    <div id="tab-suburbs" class="tab-content active"><table id="table-suburbs" class="data-table"></table></div>
-                    <div id="tab-gyms" class="tab-content"><table id="table-gyms" class="data-table"></table></div>
-                    <div id="tab-ptv" class="tab-content"><table id="table-ptv" class="data-table"></table></div>
+                <div id="data-modal-header">
+                    <h2>Layer Attribute Data</h2>
+                    <span id="modal-close-btn">&times;</span>
+                </div>
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="tab-suburbs">Suburbs (GAI)</button>
+                    <button class="tab-btn" data-tab="tab-gyms">Gyms</button>
+                    <button class="tab-btn" data-tab="tab-ptv">PTV Stops</button>
+                </div>
+                <div class="tab-content-container">
+                    <div id="tab-suburbs" class="tab-content active">
+                        <div class="table-scroll"><table id="table-suburbs" class="data-table"></table></div>
+                    </div>
+                    <div id="tab-gyms" class="tab-content">
+                        <div class="table-scroll"><table id="table-gyms" class="data-table"></table></div>
+                    </div>
+                    <div id="tab-ptv" class="tab-content">
+                        <div class="table-scroll"><table id="table-ptv" class="data-table"></table></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Map & Popups -->
-        <div id="map"><div id="popup" class="ol-popup"><a href="#" id="popup-closer"></a><div id="popup-content"></div></div>
-        <div id="custom-popup"><div id="custom-popup-header"><span id="custom-popup-title"></span><span id="custom-popup-close">×</span></div><div id="custom-popup-body"><table id="custom-popup-table"></table></div></div></div>
+        <!-- Map -->
+        <div id="map">
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+            </div>
+            <div id="custom-popup">
+                <div id="custom-popup-header">
+                    <span id="custom-popup-title">—</span>
+                    <span id="custom-popup-close">×</span>
+                </div>
+                <div id="custom-popup-body">
+                    <table id="custom-popup-table"></table>
+                </div>
+            </div>
+        </div>
 
-        <!-- Scripts -->
         <script src="resources/qgis2web_expressions.js"></script>
         <script src="resources/proj4.js"></script>
         <script>proj4.defs('EPSG:7899','+proj=lcc +lat_0=-37 +lon_0=145 +lat_1=-36 +lat_2=-38 +x_0=2500000 +y_0=2500000 +ellps=GRS80 +units=m +no_defs');</script>
@@ -162,6 +573,7 @@
         <script src="./resources/ol.js"></script>
         <script src="./resources/ol-layerswitcher.js"></script>
         <script src="resources/photon-geocoder-autocomplete.min.js"></script>
+        <script src="resources/olms.js"></script>
         <script src="layers/gyms_ptv_sa2_join_v6_withnorms_1.js"></script>
         <script src="layers/SA2_GM2021_2.js"></script>
         <script src="layers/ptv_stops_clipped_3.js"></script>
@@ -170,103 +582,350 @@
         <script src="styles/SA2_GM2021_2_style.js"></script>
         <script src="styles/ptv_stops_clipped_3_style.js"></script>
         <script src="styles/gym_points_v2_clipped_4_style.js"></script>
-        <script src="./layers/layers.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script>
+        <script src="./resources/Autolinker.min.js"></script>
         <script src="./resources/qgis2web.js"></script>
 
         <script>
-        /* --- Chatbot Logic --- */
-        const qaPairs = [
-            { k: ["seifa", "socio-economic", "disadvantage", "irsd"], a: "SEIFA stands for Socio-Economic Indexes for Areas. This project maps gym access against the Index of Relative Socio-economic Disadvantage (IRSD). We hypothesize that lower SEIFA scores (higher disadvantage) correlate with poorer accessibility to fitness infrastructure." },
-            { k: ["best", "highest", "top", "good access"], a: "Based on the Gym Accessibility Index (GAI), inner-city suburbs like Melbourne CBD, Fitzroy, and Richmond typically score the highest due to dense gym clusters, high PTV stop density, and compact land area." },
-            { k: ["methodology", "calculated", "formula", "gai", "how"], a: "The methodology calculates a Gym Accessibility Index (GAI) by combining the raw count of gyms and PTV stops within each SA2 suburb. This is then normalized by dividing by the suburb's population and land area (km²) to create a weighted, fair spatial accessibility score." },
-            { k: ["worst", "lowest", "poor access", "bad"], a: "Outer metropolitan fringes generally show the lowest GAI scores. These SA2 regions have large land masses, lower density, and fewer transport links, making active transport to health facilities difficult." }
-        ];
-        function toggleChat() { let w = document.getElementById('chat-window'); w.style.display = w.style.display === 'flex' ? 'none' : 'flex'; }
-        function sendChip(btn) { document.getElementById('chat-in').value = btn.innerText; sendChat(); document.getElementById('chat-chips').style.display = 'none'; }
-        function sendChat() {
-            let input = document.getElementById('chat-in'), txt = input.value.trim().toLowerCase(); if(!txt) return;
-            addMsg(input.value, 'user'); input.value = ''; document.getElementById('chat-chips').style.display = 'none';
-            setTimeout(() => {
-                let ans = "I'm not sure. Try asking about the GAI methodology, SEIFA, or which suburbs have the best/worst access.";
-                for(let q of qaPairs) if(q.k.some(kw => txt.includes(kw))) { ans = q.a; break; }
-                addMsg(ans, 'bot');
-            }, 500);
-        }
-        function addMsg(txt, cls) { 
-            let box = document.getElementById('chat-msgs'), d = document.createElement('div');
-            d.className = 'msg ' + cls; d.innerText = txt; box.appendChild(d); box.scrollTop = box.scrollHeight; 
-        }
-
-        /* --- Map Integration --- */
         var bannerMode = true;
+
         window.addEventListener('load', function () {
             setTimeout(function () {
-                if(typeof map !== 'undefined') map.getView().fit(ol.proj.transformExtent([144.3, -38.6, 146.2, -37.2], 'EPSG:4326', 'EPSG:7899'), {size: map.getSize()});
 
-                // Add Labels
-                var sData = [{n:'Melbourne CBD',c:[144.963,-37.813]},{n:'Fitzroy',c:[144.978,-37.798]},{n:'Richmond',c:[144.999,-37.818]},{n:'Frankston',c:[145.127,-38.144]},{n:'Dandenong',c:[145.215,-37.987]}];
-                var lyr_labels = new ol.layer.Vector({
-                    source: new ol.source.Vector({ features: sData.map(s => { let f = new ol.Feature(new ol.geom.Point(ol.proj.transform(s.c, 'EPSG:4326', 'EPSG:7899'))); f.set('name', s.n); return f; }) }),
-                    style: f => new ol.style.Style({ text: new ol.style.Text({ text: f.get('name'), font: 'bold 11px Arial', fill: new ol.style.Fill({color:'#333'}), stroke: new ol.style.Stroke({color:'#fff',width:3}) }) }), zIndex: 10
-                }); map.addLayer(lyr_labels);
+                // --- Initial Melbourne view ---
+                if (typeof map !== 'undefined') {
+                    var melbExtent = ol.proj.transformExtent(
+                        [144.3, -38.6, 146.2, -37.2],
+                        'EPSG:4326', 'EPSG:7899'
+                    );
+                    map.getView().fit(melbExtent, {
+                        size: map.getSize(),
+                        padding: [70, 30, 80, 30]
+                    });
+                }
 
-                // Toggles
-                document.getElementById('toggle-gyms').onchange = e => lyr_gym_points_v2_clipped_4.setVisible(e.target.checked);
-                document.getElementById('toggle-ptv').onchange = e => lyr_ptv_stops_clipped_3.setVisible(e.target.checked);
-                document.getElementById('toggle-labels').onchange = e => lyr_labels.setVisible(e.target.checked);
-                document.getElementById('toggle-cluster').onchange = e => { let d = e.target.checked ? 30 : 0; cluster_gym_points_v2_clipped_4.setDistance(d); cluster_ptv_stops_clipped_3.setDistance(d); };
-                document.getElementById('gai-opacity').oninput = e => { lyr_gyms_ptv_sa2_join_v6_withnorms_1.setOpacity(e.target.value); document.getElementById('gai-opacity-val').innerText = Math.round(e.target.value*100)+'%'; };
-                document.getElementById('toggle-banner').onchange = e => { bannerMode = e.target.checked; document.getElementById('stats-banner').style.display = bannerMode?'flex':'none'; };
-                document.getElementById('stats-banner-close').onclick = () => { document.getElementById('stats-data').classList.remove('active'); document.getElementById('stats-placeholder').style.display='block'; };
-                document.getElementById('custom-popup-close').onclick = () => document.getElementById('custom-popup').style.display='none';
+                // --- Suburb labels layer ---
+                var suburbData = [
+                    {name: 'Melbourne CBD', coords: [144.9631, -37.8136]},
+                    {name: 'Carlton',       coords: [144.9667, -37.7994]},
+                    {name: 'Fitzroy',       coords: [144.9789, -37.7989]},
+                    {name: 'Richmond',      coords: [144.9993, -37.8186]},
+                    {name: 'St Kilda',      coords: [144.9817, -37.8679]},
+                    {name: 'South Yarra',   coords: [144.9908, -37.8394]},
+                    {name: 'Northcote',     coords: [144.9994, -37.7726]},
+                    {name: 'Brunswick',     coords: [144.9601, -37.7701]},
+                    {name: 'Coburg',        coords: [144.9654, -37.7414]},
+                    {name: 'Preston',       coords: [145.0072, -37.7443]},
+                    {name: 'Heidelberg',    coords: [145.0666, -37.7568]},
+                    {name: 'Bundoora',      coords: [145.0602, -37.6983]},
+                    {name: 'Epping',        coords: [145.0193, -37.6463]},
+                    {name: 'Hawthorn',      coords: [145.0314, -37.8231]},
+                    {name: 'Box Hill',      coords: [145.1215, -37.8197]},
+                    {name: 'Doncaster',     coords: [145.1247, -37.7843]},
+                    {name: 'Ringwood',      coords: [145.2267, -37.8134]},
+                    {name: 'Lilydale',      coords: [145.3494, -37.7573]},
+                    {name: 'Oakleigh',      coords: [145.0865, -37.8986]},
+                    {name: 'Clayton',       coords: [145.1174, -37.9213]},
+                    {name: 'Dandenong',     coords: [145.2150, -37.9879]},
+                    {name: 'Frankston',     coords: [145.1279, -38.1443]},
+                    {name: 'Footscray',     coords: [144.8996, -37.8013]},
+                    {name: 'Sunshine',      coords: [144.8326, -37.7897]},
+                    {name: 'Werribee',      coords: [144.6637, -37.9048]},
+                    {name: 'Melton',        coords: [144.5800, -37.6800]},
+                    {name: 'Cranbourne',    coords: [145.2836, -38.1018]},
+                    {name: 'Cheltenham',    coords: [145.0515, -37.9535]},
+                    {name: 'Moorabbin',     coords: [145.0594, -37.9289]},
+                    {name: 'Pakenham',      coords: [145.4871, -38.0709]}
+                ];
 
-                // Map Click
-                map.on('singleclick', function (evt) {
-                    let hit = false;
-                    map.forEachFeatureAtPixel(evt.pixel, function (f, l) {
-                        if(hit) return; let feats = f.get('features'), feat = feats?feats[0]:f, c = feats?feats.length:1;
-                        if(l === lyr_gyms_ptv_sa2_join_v6_withnorms_1) {
-                            if(bannerMode) {
-                                document.getElementById('stats-suburb-name').innerText = feat.get('SA2_NAME21')||'Unknown';
-                                document.getElementById('stat-area').innerText = feat.get('AREASQKM21')?parseFloat(feat.get('AREASQKM21')).toFixed(1):'—';
-                                document.getElementById('stat-seifa').innerText = feat.get('seifa_IRSD_Score')||'—';
-                                document.getElementById('stat-gai').innerText = feat.get('weighted_GAI')?parseFloat(feat.get('weighted_GAI')).toFixed(3):'—';
-                                document.getElementById('stats-placeholder').style.display='none'; document.getElementById('stats-data').classList.add('active');
+                var labelFeatures = suburbData.map(function (s) {
+                    var coords = ol.proj.transform(s.coords, 'EPSG:4326', 'EPSG:7899');
+                    var f = new ol.Feature(new ol.geom.Point(coords));
+                    f.set('name', s.name);
+                    return f;
+                });
+
+                var lyr_suburb_labels = new ol.layer.Vector({
+                    source: new ol.source.Vector({ features: labelFeatures }),
+                    style: function (feature) {
+                        return new ol.style.Style({
+                            text: new ol.style.Text({
+                                text: feature.get('name'),
+                                font: 'bold 11px Arial, sans-serif',
+                                fill: new ol.style.Fill({ color: 'rgba(45,45,55,0.78)' }),
+                                stroke: new ol.style.Stroke({ color: 'rgba(255,255,255,0.68)', width: 3 }),
+                                overflow: true
+                            })
+                        });
+                    },
+                    zIndex: 10
+                });
+
+                map.addLayer(lyr_suburb_labels);
+
+                // --- Layer toggles ---
+                document.getElementById('toggle-gyms').addEventListener('change', function () {
+                    lyr_gym_points_v2_clipped_4.setVisible(this.checked);
+                });
+                document.getElementById('toggle-ptv').addEventListener('change', function () {
+                    lyr_ptv_stops_clipped_3.setVisible(this.checked);
+                });
+                document.getElementById('toggle-labels').addEventListener('change', function () {
+                    lyr_suburb_labels.setVisible(this.checked);
+                });
+                document.getElementById('toggle-basemap').addEventListener('change', function () {
+                    lyr_OSMStandard_0.setVisible(this.checked);
+                });
+
+                // --- Cluster toggle ---
+                document.getElementById('toggle-cluster').addEventListener('change', function () {
+                    var dist = this.checked ? 30 : 0;
+                    cluster_gym_points_v2_clipped_4.setDistance(dist);
+                    cluster_ptv_stops_clipped_3.setDistance(dist);
+                });
+
+                // --- GAI + SA2 boundaries opacity slider ---
+                document.getElementById('gai-opacity').addEventListener('input', function () {
+                    var val = parseFloat(this.value);
+                    lyr_gyms_ptv_sa2_join_v6_withnorms_1.setOpacity(val);
+                    lyr_SA2_GM2021_2.setOpacity(val);
+                    document.getElementById('gai-opacity-val').textContent = Math.round(val * 100) + '%';
+                });
+
+                // --- Stats panel mode toggle ---
+                document.getElementById('toggle-banner').addEventListener('change', function () {
+                    bannerMode = this.checked;
+                    if (bannerMode) {
+                        document.getElementById('stats-banner').classList.remove('hidden');
+                    } else {
+                        document.getElementById('stats-banner').classList.add('hidden');
+                        document.getElementById('custom-popup').style.display = 'none';
+                    }
+                });
+
+                // --- Stats banner close (revert to placeholder) ---
+                document.getElementById('stats-banner-close').addEventListener('click', function () {
+                    document.getElementById('stats-data').classList.remove('active');
+                    document.getElementById('stats-placeholder').style.display = 'block';
+                });
+
+                // --- Custom popup close ---
+                document.getElementById('custom-popup-close').addEventListener('click', function () {
+                    document.getElementById('custom-popup').style.display = 'none';
+                });
+
+                // --- Map click handler ---
+                if (typeof map !== 'undefined') {
+                    map.on('singleclick', function (evt) {
+                        var found = false;
+
+                        map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+                            if (found) return;
+
+                            var clusterFeatures = feature.get('features');
+                            var f     = clusterFeatures ? clusterFeatures[0] : feature;
+                            var count = clusterFeatures ? clusterFeatures.length : 1;
+
+                            // Gym points
+                            if (layer === lyr_gym_points_v2_clipped_4) {
+                                if (count > 1) {
+                                    showPopup('🏋️ Gym Cluster', [['Gyms in area', count]], evt.pixel);
+                                } else {
+                                    showPopup('🏋️ ' + (f.get('name') || 'Unnamed Gym'), [], evt.pixel);
+                                }
+                                found = true;
+
+                            // PTV stops
+                            } else if (layer === lyr_ptv_stops_clipped_3) {
+                                if (count > 1) {
+                                    showPopup('🚌 Transport Cluster', [['Stops in area', count]], evt.pixel);
+                                } else {
+                                    showPopup('🚌 ' + (f.get('STOP_NAME') || 'Unknown Stop'),
+                                        [['Transport Type', f.get('MODE') || 'Unknown']], evt.pixel);
+                                }
+                                found = true;
+
+                            // Suburb choropleth
+                            } else if (layer === lyr_gyms_ptv_sa2_join_v6_withnorms_1) {
+                                var name  = f.get('SA2_NAME21')      || 'Unknown Suburb';
+                                var area  = f.get('AREASQKM21');
+                                var pop   = f.get('seifa_Population');
+                                var seifa = f.get('seifa_IRSD_Score');
+                                var ptv   = f.get('ptv_stop_count');
+                                var gyms  = f.get('gym_count');
+                                var gai   = f.get('weighted_GAI');
+
+                                if (bannerMode) {
+                                    document.getElementById('custom-popup').style.display = 'none';
+                                    showStatsBanner(name, area, pop, seifa, ptv, gyms, gai);
+                                } else {
+                                    showPopup('📍 ' + name, [
+                                        ['Area (km²)',  area  ? parseFloat(area).toFixed(2)          : 'N/A'],
+                                        ['Population',  pop   ? parseInt(pop).toLocaleString()        : 'N/A'],
+                                        ['SEIFA Score', seifa ? seifa                                 : 'N/A'],
+                                        ['PTV Stops',   ptv   != null ? ptv                           : '0'],
+                                        ['Gym Count',   gyms  != null ? gyms                          : '0'],
+                                        ['GAI Score',   gai   ? parseFloat(gai).toFixed(3)            : 'N/A']
+                                    ], evt.pixel);
+                                }
+                                found = true;
                             }
-                            hit = true;
-                        } else if (l === lyr_gym_points_v2_clipped_4 || l === lyr_ptv_stops_clipped_3) {
-                            let title = l===lyr_gym_points_v2_clipped_4 ? (c>1?'🏋️ Gym Cluster':'🏋️ '+feat.get('name')) : (c>1?'🚌 PTV Cluster':'🚌 '+feat.get('STOP_NAME'));
-                            document.getElementById('custom-popup-title').innerText = title;
-                            document.getElementById('custom-popup-table').innerHTML = c>1?`<tr><th>Count</th><td>${c}</td></tr>`:'';
-                            let p = document.getElementById('custom-popup'); p.style.display='block'; p.style.left=(evt.pixel[0]+15)+'px'; p.style.top=(evt.pixel[1]-15)+'px';
-                            hit = true;
+                        });
+
+                        if (!found) {
+                            document.getElementById('custom-popup').style.display = 'none';
                         }
                     });
-                    if(!hit) document.getElementById('custom-popup').style.display='none';
+                }
+
+                // ==========================================
+                // ATTRIBUTE TABLE MODAL LOGIC
+                // ==========================================
+
+                // Utility to extract unclustered properties from layers
+                function extractLayerData(layer) {
+                    if (!layer) return [];
+                    let features = layer.getSource().getFeatures();
+                    let dataList = [];
+                    
+                    features.forEach(f => {
+                        if (f.get('features')) {
+                            // It's a cluster, loop inner features
+                            let subFeatures = f.get('features');
+                            subFeatures.forEach(sf => dataList.push(sf.getProperties()));
+                        } else {
+                            dataList.push(f.getProperties());
+                        }
+                    });
+                    return dataList;
+                }
+
+                // Build HTML Table
+                function buildTableHTML(data) {
+                    if (!data || data.length === 0) return '<tr><td style="padding:15px; text-align:center;">No data available.</td></tr>';
+                    
+                    // Get all unique columns excluding geometry
+                    let keys = new Set();
+                    data.forEach(item => {
+                        Object.keys(item).forEach(k => {
+                            if (k !== 'geometry' && k !== 'features') keys.add(k);
+                        });
+                    });
+                    let cols = Array.from(keys);
+                    
+                    let html = '<thead><tr>';
+                    cols.forEach((col, index) => {
+                        html += `<th onclick="sortTable(this, ${index})">${col} <span></span></th>`;
+                    });
+                    html += '</tr></thead><tbody>';
+                    
+                    data.forEach(item => {
+                        html += '<tr>';
+                        cols.forEach(col => {
+                            let val = item[col];
+                            if (val === null || val === undefined) val = '';
+                            else if (typeof val === 'number') val = (val % 1 !== 0) ? val.toFixed(4) : val; // Format decimals
+                            html += `<td>${val}</td>`;
+                        });
+                        html += '</tr>';
+                    });
+                    html += '</tbody>';
+                    return html;
+                }
+
+                // Open Modal & Populate Data
+                document.getElementById('btn-open-table').addEventListener('click', function() {
+                    document.getElementById('table-suburbs').innerHTML = buildTableHTML(extractLayerData(lyr_gyms_ptv_sa2_join_v6_withnorms_1));
+                    document.getElementById('table-gyms').innerHTML = buildTableHTML(extractLayerData(lyr_gym_points_v2_clipped_4));
+                    document.getElementById('table-ptv').innerHTML = buildTableHTML(extractLayerData(lyr_ptv_stops_clipped_3));
+                    document.getElementById('data-modal').style.display = 'block';
                 });
 
-                // Tables Logic
-                function buildTable(l) {
-                    if(!l) return ''; let html='<thead><tr>', keys=new Set(), data=[];
-                    l.getSource().getFeatures().forEach(f => { if(f.get('features')) f.get('features').forEach(sf=>data.push(sf.getProperties())); else data.push(f.getProperties()); });
-                    if(!data.length) return '<tr><td>No data</td></tr>';
-                    data.forEach(i => Object.keys(i).forEach(k => { if(k!=='geometry'&&k!=='features') keys.add(k); }));
-                    Array.from(keys).forEach(k => html+=`<th>${k}</th>`); html+='</tr></thead><tbody>';
-                    data.forEach(i => { html+='<tr>'; Array.from(keys).forEach(k => html+=`<td>${typeof i[k]==='number'?parseFloat(i[k]).toFixed(3):i[k]||''}</td>`); html+='</tr>'; });
-                    return html+'</tbody>';
-                }
-                document.getElementById('btn-open-table').onclick = () => { 
-                    document.getElementById('table-suburbs').innerHTML = buildTable(lyr_gyms_ptv_sa2_join_v6_withnorms_1);
-                    document.getElementById('table-gyms').innerHTML = buildTable(lyr_gym_points_v2_clipped_4);
-                    document.getElementById('data-modal').style.display='block'; 
-                };
-                document.getElementById('modal-close-btn').onclick = () => document.getElementById('data-modal').style.display='none';
-                document.querySelectorAll('.tab-btn').forEach(b => b.onclick=function(){ 
-                    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
-                    this.classList.add('active'); document.getElementById(this.dataset.tab).classList.add('active');
+                // Close Modal
+                document.getElementById('modal-close-btn').addEventListener('click', function() {
+                    document.getElementById('data-modal').style.display = 'none';
                 });
+
+                // Tab Switching
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        this.classList.add('active');
+                        document.getElementById(this.getAttribute('data-tab')).classList.add('active');
+                    });
+                });
+
             }, 600);
         });
+
+        // Global Table Sorting Logic
+        window.sortTable = function(th, colIndex) {
+            let table = th.closest('table');
+            let tbody = table.querySelector('tbody');
+            if (!tbody) return;
+            
+            let rows = Array.from(tbody.querySelectorAll('tr'));
+            let isAsc = th.classList.contains('asc');
+            
+            // Reset all headers
+            table.querySelectorAll('th').forEach(h => {
+                h.classList.remove('asc', 'desc');
+                h.querySelector('span').innerHTML = '';
+            });
+
+            // Set current sort direction
+            th.classList.toggle('asc', !isAsc);
+            th.classList.toggle('desc', isAsc);
+            th.querySelector('span').innerHTML = isAsc ? '▼' : '▲';
+
+            rows.sort((a, b) => {
+                let cellA = a.children[colIndex].textContent.trim();
+                let cellB = b.children[colIndex].textContent.trim();
+                
+                let numA = parseFloat(cellA);
+                let numB = parseFloat(cellB);
+                
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return isAsc ? numB - numA : numA - numB;
+                } else {
+                    return isAsc ? cellB.localeCompare(cellA) : cellA.localeCompare(cellB);
+                }
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        };
+
+        function showPopup(title, rows, pixel) {
+            var popup = document.getElementById('custom-popup');
+            var mapEl = document.getElementById('map');
+            document.getElementById('custom-popup-title').textContent = title;
+            var html = '';
+            rows.forEach(function (row) {
+                html += '<tr><th>' + row[0] + '</th><td>' + row[1] + '</td></tr>';
+            });
+            document.getElementById('custom-popup-table').innerHTML = html;
+            popup.style.display = 'block';
+            var x = pixel[0] + 12;
+            var y = pixel[1] - 12;
+            if (x + popup.offsetWidth  > mapEl.offsetWidth  - 10) { x = pixel[0] - popup.offsetWidth  - 12; }
+            if (y + popup.offsetHeight > mapEl.offsetHeight - 10) { y = pixel[1] - popup.offsetHeight - 12; }
+            popup.style.left = x + 'px';
+            popup.style.top  = y + 'px';
+        }
+
+        function showStatsBanner(name, area, pop, seifa, ptv, gyms, gai) {
+            document.getElementById('stats-suburb-name').textContent = name;
+            document.getElementById('stat-area').textContent  = area  ? parseFloat(area).toFixed(1)    : '—';
+            document.getElementById('stat-pop').textContent   = pop   ? parseInt(pop).toLocaleString() : '—';
+            document.getElementById('stat-seifa').textContent = seifa ? seifa                          : '—';
+            document.getElementById('stat-ptv').textContent   = ptv   != null ? ptv                    : '0';
+            document.getElementById('stat-gyms').textContent  = gyms  != null ? gyms                   : '0';
+            document.getElementById('stat-gai').textContent   = gai   ? parseFloat(gai).toFixed(3)    : '—';
+            document.getElementById('stats-placeholder').style.display = 'none';
+            document.getElementById('stats-data').classList.add('active');
+        }
         </script>
     </body>
 </html>
