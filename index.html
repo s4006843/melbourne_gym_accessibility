@@ -22,6 +22,7 @@
         #popup { display: none !important; }
         .layer-switcher { display: none !important; }
 
+        /* Title */
         #map-title {
             position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
             background: rgba(20,60,120,0.82); color: white; padding: 10px 26px;
@@ -29,6 +30,8 @@
             font-weight: bold; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.35);
             white-space: nowrap; letter-spacing: 0.4px;
         }
+
+        /* Attribution */
         #cc-attribution {
             position: fixed; top: 14px; right: 14px; background: rgba(255,255,255,0.90);
             padding: 6px 10px; border-radius: 6px; font-size: 10px; z-index: 1000;
@@ -37,16 +40,30 @@
         }
         #cc-attribution a { color: #333; text-decoration: none; }
         #cc-attribution a:hover { text-decoration: underline; }
-        #cc-attribution img { height: 15px; vertical-align: middle; display: block; margin: 0 auto 2px auto; }
+        #cc-attribution img { height: 15px; display: block; margin: 0 auto 2px auto; }
 
+        /* Legend */
         #legend {
             position: fixed; bottom: 28px; left: 14px; background: rgba(255,255,255,0.93);
             border-radius: 8px; padding: 14px 16px; z-index: 1000;
             box-shadow: 0 3px 12px rgba(0,0,0,0.25); font-family: Arial, sans-serif;
-            font-size: 13px; min-width: 215px; max-height: calc(100vh - 160px);
+            font-size: 13px; min-width: 215px; max-height: calc(100vh - 100px);
             overflow-y: auto; transition: bottom 0.3s ease;
         }
-        #legend h3 { margin: 0 0 10px 0; font-size: 14px; font-weight: bold; color: #222; border-bottom: 1px solid #ddd; padding-bottom: 7px; }
+        #legend-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 7px;
+        }
+        #legend-header h3 { margin: 0; font-size: 14px; font-weight: bold; color: #222; }
+        #legend-minimise-btn {
+            background: none; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;
+            font-size: 15px; color: #555; width: 22px; height: 22px;
+            display: flex; align-items: center; justify-content: center; line-height: 1; padding: 0;
+            flex-shrink: 0;
+        }
+        #legend-minimise-btn:hover { background: #f0f0f0; }
+        #legend.minimised #legend-content { display: none; }
+        #legend.minimised { padding-bottom: 12px; }
         .legend-section-title { font-weight: bold; color: #555; margin: 10px 0 5px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
         .legend-item { display: flex; align-items: center; margin: 4px 0; color: #333; font-size: 12px; }
         .legend-item img { margin-right: 8px; width: 22px; height: 14px; flex-shrink: 0; }
@@ -58,21 +75,15 @@
         .opacity-row input[type="range"] { flex: 1; cursor: pointer; accent-color: rgba(20,60,120,0.8); }
         .opacity-value { min-width: 30px; text-align: right; font-size: 11px; color: #888; }
         .legend-divider { border: none; border-top: 1px solid #e8e8e8; margin: 8px 0; }
-        .legend-btn {
-            margin-top: 8px; width: 100%; padding: 10px; color: white; border: none;
-            border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+        .legend-btn { margin-top: 8px; width: 100%; padding: 10px; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
+        /* Custom popup */
         #custom-popup {
             display: none; position: absolute; background: white; border-radius: 8px;
             box-shadow: 0 4px 16px rgba(0,0,0,0.35); min-width: 230px; max-width: 290px;
             z-index: 2000; font-family: Arial, sans-serif; font-size: 13px; overflow: hidden; pointer-events: auto;
         }
-        #custom-popup-header {
-            background: rgba(20,60,120,0.88); color: white; padding: 10px 14px;
-            font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; align-items: center;
-        }
+        #custom-popup-header { background: rgba(20,60,120,0.88); color: white; padding: 10px 14px; font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
         #custom-popup-close { cursor: pointer; font-size: 20px; line-height: 1; opacity: 0.75; margin-left: 10px; }
         #custom-popup-close:hover { opacity: 1; }
         #custom-popup-body { padding: 10px 14px 12px 14px; }
@@ -82,15 +93,15 @@
         #custom-popup-body th { text-align: left; color: #666; font-weight: normal; padding: 5px 0; width: 55%; }
         #custom-popup-body td { text-align: right; font-weight: bold; color: #222; padding: 5px 0; }
 
+        /* Stats panel */
         #stats-banner {
             position: fixed; bottom: 28px; right: 14px; width: 260px;
             background: rgba(20,60,120,0.92); color: white; padding: 16px;
             border-radius: 10px; z-index: 1500; display: flex; flex-direction: column;
             box-shadow: 0 5px 20px rgba(0,0,0,0.35); font-family: Arial, sans-serif;
-            backdrop-filter: blur(5px);
         }
         #stats-banner.hidden { display: none; }
-        #stats-placeholder { width: 100%; text-align: center; font-size: 13px; opacity: 0.8; font-style: italic; padding: 16px 0; line-height: 1.5; }
+        #stats-placeholder { text-align: center; font-size: 13px; opacity: 0.8; font-style: italic; padding: 16px 0; line-height: 1.5; }
         #stats-data { display: none; width: 100%; flex-direction: column; }
         #stats-data.active { display: flex; }
         #stats-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.25); }
@@ -103,25 +114,18 @@
         .stat-value { font-size: 15px; font-weight: bold; }
 
         /* Data Modal */
-        #data-modal {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6); z-index: 3000; font-family: Arial, sans-serif; backdrop-filter: blur(3px);
-        }
-        #data-modal-content {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-            background: #fff; width: 85%; height: 85%; border-radius: 10px;
-            display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 5px 30px rgba(0,0,0,0.4);
-        }
+        #data-modal { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); z-index: 3000; font-family: Arial, sans-serif; backdrop-filter: blur(3px); }
+        #data-modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: #fff; width: 85%; height: 85%; border-radius: 10px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 5px 30px rgba(0,0,0,0.4); }
         #data-modal-header { background: #143c78; color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
-        #data-modal-header h2 { margin: 0; font-size: 18px; letter-spacing: 0.5px; }
-        #modal-close-btn { font-size: 30px; cursor: pointer; line-height: 1; opacity: 0.8; }
+        #data-modal-header h2 { margin: 0; font-size: 18px; }
+        #modal-close-btn { font-size: 30px; cursor: pointer; opacity: 0.8; }
         #modal-close-btn:hover { opacity: 1; }
         .tab-buttons { display: flex; background: #f4f4f4; border-bottom: 1px solid #ddd; }
         .tab-btn { padding: 12px 24px; border: none; background: none; cursor: pointer; font-size: 14px; font-weight: bold; color: #666; outline: none; transition: 0.2s; }
         .tab-btn:hover { background: #eaeaea; color: #333; }
         .tab-btn.active { background: #fff; color: #143c78; border-bottom: 3px solid #143c78; }
-        .tab-content-container { flex: 1; overflow: hidden; position: relative; background: #fff; }
-        .tab-content { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+        .tab-content-container { flex: 1; overflow: hidden; position: relative; }
+        .tab-content { display: none; position: absolute; top:0; left:0; right:0; bottom:0; }
         .tab-content.active { display: block; }
         .table-scroll { width: 100%; height: 100%; overflow: auto; }
         .data-table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
@@ -132,64 +136,55 @@
         .data-table tr:nth-child(even) { background: #fafbfc; }
         .data-table tr:hover { background: #f0f7ff; }
 
-        /* Chat Modal */
-        #chat-modal {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.55); z-index: 3000; font-family: Arial, sans-serif; backdrop-filter: blur(3px);
+        /* ── Floating Ask AI button ── */
+        #ask-ai-btn {
+            position: fixed; bottom: 28px; right: 290px;
+            background: #143c78; color: white; border: none;
+            border-radius: 24px; padding: 11px 18px;
+            font-family: Arial, sans-serif; font-size: 14px; font-weight: bold;
+            cursor: pointer; z-index: 1600;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+            display: flex; align-items: center; gap: 7px;
         }
-        #chat-modal-content {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-            width: 460px; max-width: 95%; height: 580px; max-height: 90vh;
-            background: #fff; border-radius: 12px; display: flex; flex-direction: column;
-            overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+        #ask-ai-btn:hover { background: #0f2d5e; }
+
+        /* ── Chat widget (pops up above Ask AI button) ── */
+        #chat-widget {
+            display: none; position: fixed; bottom: 80px; right: 290px;
+            width: 360px; height: 460px; background: white;
+            border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+            z-index: 1600; flex-direction: column; overflow: hidden;
+            font-family: Arial, sans-serif;
         }
-        #chat-modal-header {
-            background: #143c78; color: white; padding: 14px 18px;
+        #chat-widget.open { display: flex; }
+        #cw-header {
+            background: #143c78; color: white; padding: 13px 16px;
             display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
         }
-        #chat-modal-header h2 { margin: 0; font-size: 16px; }
-        #chat-modal-header p { margin: 2px 0 0; font-size: 11px; opacity: 0.7; }
-        #chat-modal-close { font-size: 28px; cursor: pointer; opacity: 0.8; line-height: 1; }
-        #chat-modal-close:hover { opacity: 1; }
-        #chat-messages {
-            flex: 1; overflow-y: auto; padding: 14px;
-            display: flex; flex-direction: column; gap: 10px; min-height: 0;
-        }
-        .chat-msg { padding: 10px 13px; border-radius: 12px; font-size: 13px; line-height: 1.6; max-width: 88%; }
+        #cw-header span { font-size: 15px; font-weight: bold; }
+        #cw-close { font-size: 24px; cursor: pointer; opacity: 0.8; line-height: 1; }
+        #cw-close:hover { opacity: 1; }
+        #cw-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 9px; min-height: 0; }
+        .chat-msg { padding: 9px 12px; border-radius: 12px; font-size: 12.5px; line-height: 1.6; max-width: 90%; white-space: pre-line; }
         .chat-msg.user { align-self: flex-end; background: #143c78; color: white; border-bottom-right-radius: 3px; }
-        .chat-msg.bot { align-self: flex-start; background: #f0f4f8; color: #1e293b; border-bottom-left-radius: 3px; border-left: 3px solid #143c78; }
-        #chat-typing { display: none; padding: 0 14px 6px; flex-shrink: 0; }
-        .typing-dots { display: flex; gap: 4px; align-items: center; background: #f0f4f8; border-left: 3px solid #cbd5e1; padding: 10px 14px; border-radius: 12px; width: fit-content; }
+        .chat-msg.bot  { align-self: flex-start; background: #f0f4f8; color: #1e293b; border-bottom-left-radius: 3px; border-left: 3px solid #143c78; }
+        #cw-typing { display: none; padding: 0 12px 6px; flex-shrink: 0; }
+        .typing-dots { display: flex; gap: 4px; align-items: center; background: #f0f4f8; border-left: 3px solid #cbd5e1; padding: 9px 12px; border-radius: 12px; width: fit-content; }
         .td { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; animation: bounce 1.2s infinite ease-in-out; }
         .td:nth-child(2) { animation-delay: .15s; }
         .td:nth-child(3) { animation-delay: .3s; }
-        @keyframes bounce { 0%,100% { transform: translateY(0); opacity:.4; } 50% { transform: translateY(-5px); opacity:1; } }
-        #chat-chips { padding: 0 14px 8px; flex-shrink: 0; }
-        .chips-label { font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.4px; }
-        .chip {
-            display: block; width: 100%; text-align: left; background: #fff;
-            border: 1px solid #cbd5e1; border-radius: 5px; font-family: Arial, sans-serif;
-            font-size: 11px; color: #475569; padding: 6px 10px; cursor: pointer; margin-bottom: 4px;
-        }
+        @keyframes bounce { 0%,100%{transform:translateY(0);opacity:.4;} 50%{transform:translateY(-5px);opacity:1;} }
+        #cw-chips { padding: 0 12px 8px; flex-shrink: 0; }
+        .chips-label { font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .chip { display: block; width: 100%; text-align: left; background: #fff; border: 1px solid #cbd5e1; border-radius: 5px; font-family: Arial, sans-serif; font-size: 11px; color: #475569; padding: 6px 10px; cursor: pointer; margin-bottom: 4px; }
         .chip:hover { border-color: #143c78; color: #143c78; background: #f0f4ff; }
-        #chat-input-row {
-            padding: 10px 14px; border-top: 1px solid #e2e8f0;
-            display: flex; gap: 8px; align-items: flex-end; flex-shrink: 0;
-        }
-        #chat-input {
-            flex: 1; font-family: Arial, sans-serif; font-size: 12px;
-            border: 1px solid #cbd5e1; border-radius: 20px; padding: 9px 14px;
-            resize: none; outline: none; max-height: 80px; line-height: 1.4; color: #1e293b;
-        }
-        #chat-input:focus { border-color: #143c78; }
-        #chat-input::placeholder { color: #94a3b8; }
-        #chat-send-btn {
-            background: #143c78; border: none; border-radius: 50%;
-            width: 36px; height: 36px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        #chat-send-btn:hover { background: #0f2d5e; }
-        #chat-send-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+        #cw-input-row { padding: 10px 12px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+        #cw-input { flex: 1; font-family: Arial, sans-serif; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 20px; padding: 9px 14px; outline: none; color: #1e293b; }
+        #cw-input:focus { border-color: #143c78; }
+        #cw-input::placeholder { color: #94a3b8; }
+        #cw-send-btn { background: #143c78; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        #cw-send-btn:hover { background: #0f2d5e; }
+        #cw-send-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
         </style>
         <title>Melbourne Gym Accessibility Index</title>
     </head>
@@ -206,34 +201,40 @@
             <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
         </div>
 
+        <!-- Legend with minimise -->
         <div id="legend">
-            <h3>Map Legend</h3>
-            <div class="legend-section-title">Gym Accessibility Index</div>
-            <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_0.png"> Very Low (0 – 0.06)</div>
-            <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_1.png"> Low (0.06 – 0.14)</div>
-            <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_2.png"> Moderate (0.14 – 0.19)</div>
-            <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_3.png"> High (0.19 – 0.32)</div>
-            <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_4.png"> Very High (0.32 – 0.71)</div>
-            <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_5.png"> No Data</div>
-            <div class="opacity-row">
-                <span>Opacity</span>
-                <input type="range" id="gai-opacity" min="0" max="1" step="0.05" value="1">
-                <span class="opacity-value" id="gai-opacity-val">100%</span>
+            <div id="legend-header">
+                <h3>Map Legend</h3>
+                <button id="legend-minimise-btn" title="Minimise legend">−</button>
             </div>
-            <hr class="legend-divider">
-            <div class="legend-section-title">Layers</div>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-gyms" checked><img src="styles/legend/gym_points_v2_clipped_4.png"> Gym Locations</label>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-ptv" checked><img src="styles/legend/ptv_stops_clipped_3.png"> Public Transport Stops</label>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-labels" checked><span class="toggle-icon" style="color:#555;font-weight:bold;">Aa</span> Suburb Labels</label>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-basemap" checked><span class="toggle-icon" style="background:#c8dea8;border:1px solid #aaa;border-radius:2px;"></span> OSM Basemap</label>
-            <hr class="legend-divider">
-            <div class="legend-section-title">Display Options</div>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-cluster" checked><span class="toggle-icon">⬤</span> Cluster Points</label>
-            <label class="layer-toggle"><input type="checkbox" id="toggle-banner" checked><span class="toggle-icon">📊</span> Stats Panel Mode</label>
-            <button id="btn-open-table" class="legend-btn" style="background:#143c78;">🗃️ View Attribute Tables</button>
-            <button id="btn-open-chat" class="legend-btn" style="background:rgba(20,60,120,0.72);">💬 Ask the Map Assistant</button>
+            <div id="legend-content">
+                <div class="legend-section-title">Gym Accessibility Index</div>
+                <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_0.png"> Very Low (0 – 0.06)</div>
+                <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_1.png"> Low (0.06 – 0.14)</div>
+                <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_2.png"> Moderate (0.14 – 0.19)</div>
+                <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_3.png"> High (0.19 – 0.32)</div>
+                <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_4.png"> Very High (0.32 – 0.71)</div>
+                <div class="legend-item"><img src="styles/legend/gyms_ptv_sa2_join_v6_withnorms_1_5.png"> No Data</div>
+                <div class="opacity-row">
+                    <span>Opacity</span>
+                    <input type="range" id="gai-opacity" min="0" max="1" step="0.05" value="1">
+                    <span class="opacity-value" id="gai-opacity-val">100%</span>
+                </div>
+                <hr class="legend-divider">
+                <div class="legend-section-title">Layers</div>
+                <label class="layer-toggle"><input type="checkbox" id="toggle-gyms" checked><img src="styles/legend/gym_points_v2_clipped_4.png"> Gym Locations</label>
+                <label class="layer-toggle"><input type="checkbox" id="toggle-ptv" checked><img src="styles/legend/ptv_stops_clipped_3.png"> Public Transport Stops</label>
+                <label class="layer-toggle"><input type="checkbox" id="toggle-labels" checked><span class="toggle-icon" style="color:#555;font-weight:bold;">Aa</span> Suburb Labels</label>
+                <label class="layer-toggle"><input type="checkbox" id="toggle-basemap" checked><span class="toggle-icon" style="background:#c8dea8;border:1px solid #aaa;border-radius:2px;"></span> OSM Basemap</label>
+                <hr class="legend-divider">
+                <div class="legend-section-title">Display Options</div>
+                <label class="layer-toggle"><input type="checkbox" id="toggle-cluster" checked><span class="toggle-icon">⬤</span> Cluster Points</label>
+                <label class="layer-toggle"><input type="checkbox" id="toggle-banner" checked><span class="toggle-icon">📊</span> Stats Panel Mode</label>
+                <button id="btn-open-table" class="legend-btn" style="background:#143c78;">🗃️ View Attribute Tables</button>
+            </div>
         </div>
 
+        <!-- Stats panel -->
         <div id="stats-banner">
             <div id="stats-placeholder">📍 Select a suburb on the map to view its statistics</div>
             <div id="stats-data">
@@ -249,6 +250,41 @@
                     <div class="stat-card"><div class="stat-label">Gym Count</div><div class="stat-value" id="stat-gyms">—</div></div>
                     <div class="stat-card"><div class="stat-label">GAI Score</div><div class="stat-value" id="stat-gai">—</div></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Floating Ask AI button -->
+        <button id="ask-ai-btn">🤖 Ask AI</button>
+
+        <!-- Chat widget -->
+        <div id="chat-widget">
+            <div id="cw-header">
+                <span>🤖 Index Assistant</span>
+                <span id="cw-close">×</span>
+            </div>
+            <div id="cw-messages">
+                <div class="chat-msg bot">Hi! I'm an AI assistant trained on the methodology of this Gym Accessibility map. Ask me anything!</div>
+            </div>
+            <div id="cw-typing">
+                <div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
+            </div>
+            <div id="cw-chips">
+                <div class="chips-label">Try asking</div>
+                <button class="chip" onclick="cwChip(this)">Which suburb has the best gym access?</button>
+                <button class="chip" onclick="cwChip(this)">What does SEIFA mean?</button>
+                <button class="chip" onclick="cwChip(this)">How is the GAI score calculated?</button>
+                <button class="chip" onclick="cwChip(this)">What data sources were used?</button>
+                <button class="chip" onclick="cwChip(this)">What are the limitations of this analysis?</button>
+            </div>
+            <div id="cw-input-row">
+                <input type="text" id="cw-input" placeholder="Type a question..."
+                    onkeydown="if(event.key==='Enter') sendCW();">
+                <button id="cw-send-btn" onclick="sendCW()">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="white" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22,2 15,22 11,13 2,9"/>
+                    </svg>
+                </button>
             </div>
         </div>
 
@@ -268,45 +304,6 @@
                     <div id="tab-suburbs" class="tab-content active"><div class="table-scroll"><table id="table-suburbs" class="data-table"></table></div></div>
                     <div id="tab-gyms" class="tab-content"><div class="table-scroll"><table id="table-gyms" class="data-table"></table></div></div>
                     <div id="tab-ptv" class="tab-content"><div class="table-scroll"><table id="table-ptv" class="data-table"></table></div></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chat Modal -->
-        <div id="chat-modal">
-            <div id="chat-modal-content">
-                <div id="chat-modal-header">
-                    <div>
-                        <h2>🤖 Map Assistant</h2>
-                        <p>Ask anything about this map and its methodology</p>
-                    </div>
-                    <span id="chat-modal-close">×</span>
-                </div>
-                <div id="chat-messages">
-                    <div class="chat-msg bot">Hi! I'm the Map Assistant for the Melbourne Gym Accessibility Index. Ask me about the methodology, data sources, what SEIFA means, or how to use the map!</div>
-                </div>
-                <div id="chat-typing">
-                    <div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>
-                </div>
-                <div id="chat-chips">
-                    <div class="chips-label">Try asking</div>
-                    <button class="chip" onclick="chipClick(this)">Which suburb has the best gym access?</button>
-                    <button class="chip" onclick="chipClick(this)">What is SEIFA and why does it matter?</button>
-                    <button class="chip" onclick="chipClick(this)">How is the GAI calculated?</button>
-                    <button class="chip" onclick="chipClick(this)">What data sources were used?</button>
-                    <button class="chip" onclick="chipClick(this)">What do the colours on the map mean?</button>
-                </div>
-                <div id="chat-input-row">
-                    <textarea id="chat-input" placeholder="Type a question..." rows="1"
-                        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"
-                        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'">
-                    </textarea>
-                    <button id="chat-send-btn" onclick="sendChat()">
-                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="white" stroke-width="2">
-                            <line x1="22" y1="2" x2="11" y2="13"/>
-                            <polygon points="22,2 15,22 11,13 2,9"/>
-                        </svg>
-                    </button>
                 </div>
             </div>
         </div>
@@ -350,154 +347,118 @@
         <script>
         var bannerMode = true;
 
-        /* ═══════════════════════════════════════
-           CHATBOT Q&A KNOWLEDGE BASE
-           Specific to Melbourne Gym Accessibility
-           ═══════════════════════════════════════ */
+        /* ══════════════════════════════════
+           CHATBOT KNOWLEDGE BASE
+           ══════════════════════════════════ */
         var mapQA = [
-            {
-                keywords: ["hello", "hi", "hey", "help", "what can you", "what do you know"],
-                answer: "Hi! I'm the Map Assistant for the Melbourne Gym Accessibility Index. I can answer questions about the methodology, data sources, what SEIFA means, how the GAI is calculated, and how to use the map. Try one of the suggestions below!"
-            },
-            {
-                keywords: ["gai", "gym accessibility index", "accessibility index", "what is the index", "what does gai mean"],
-                answer: "The Gym Accessibility Index (GAI) is a composite score between 0 and 1 that measures how well-served each Melbourne suburb (SA2) is for gym access. It combines three factors: gym availability per 10,000 residents (50% weight), public transport stop density per km² (30%), and socioeconomic status via SEIFA (20%). A higher score means better overall gym accessibility."
-            },
-            {
-                keywords: ["calculated", "how is", "methodology", "formula", "weighted", "weights", "calculation", "how does it work"],
-                answer: "The GAI is calculated in three steps:\n1) Raw metrics are derived — gyms per 10,000 people, PTV stops per km², and SEIFA IRSD score.\n2) Each metric is normalised to 0–1 using min-max normalisation: (value − min) ÷ (max − min).\n3) A weighted sum is applied: GAI = (0.5 × gym score) + (0.3 × transport score) + (0.2 × SEIFA score).\nThe gym component has the highest weight as it is the primary driver of accessibility."
-            },
-            {
-                keywords: ["seifa", "socioeconomic", "disadvantage", "irsd", "advantage", "income", "education"],
-                answer: "SEIFA stands for Socio-Economic Indexes for Areas, published by the Australian Bureau of Statistics (ABS). This map uses the IRSD — Index of Relative Socio-economic Disadvantage — which scores areas based on income, education, employment, and housing. Scores sit around a national average of 1,000. Lower scores mean more disadvantage; higher scores mean less. SEIFA is included because lower-income areas may face cost and transport barriers to gym access beyond just physical proximity."
-            },
-            {
-                keywords: ["best", "highest gai", "most accessible", "top suburb", "best gym access", "which suburb"],
-                answer: "The suburbs with the highest GAI scores (Very High: 0.32–0.71) are generally inner-city and inner-suburban areas with dense gym networks, excellent public transport coverage, and above-average SEIFA scores. Look for the darkest shading on the choropleth map. Click any suburb to view its exact GAI score in the stats panel."
-            },
-            {
-                keywords: ["worst", "lowest gai", "least accessible", "poor gym", "no gym", "lowest score"],
-                answer: "Suburbs with the lowest GAI scores (Very Low: 0–0.06) are typically outer fringe areas with few or no gyms, limited public transport, and sometimes lower SEIFA scores. These suburbs represent a gap in gym infrastructure that could be targeted by urban planners and health policy makers. Grey areas indicate No Data — usually non-residential zones like airports or parks."
-            },
-            {
-                keywords: ["ptv", "public transport", "bus", "tram", "train", "transport stop", "transit"],
-                answer: "PTV (Public Transport Victoria) stop data includes all bus, tram, and train stops across Greater Melbourne. In this analysis, PTV stops are counted per km² of each SA2 to create a transport density metric. Higher density reflects better connectivity — making it easier to reach a gym without a car. You can toggle the PTV stops layer on or off in the legend."
-            },
-            {
-                keywords: ["sa2", "statistical area", "suburb boundary", "suburb boundaries", "abs boundaries"],
-                answer: "SA2 (Statistical Area Level 2) boundaries are geographic units defined by the Australian Bureau of Statistics. They roughly correspond to suburban communities with populations between 3,000–25,000 people. This project aggregates gym counts, PTV stops, population, and SEIFA to the SA2 level, allowing meaningful comparisons across Greater Melbourne's approximately 360 suburbs."
-            },
-            {
-                keywords: ["data source", "where did", "osm", "openstreetmap", "data come from", "dataset", "datasets"],
-                answer: "This project uses four datasets:\n1) Gym locations from OpenStreetMap (OSM), filtered by the 'leisure=fitness_centre' tag.\n2) PTV stop locations from GTFS data published by Public Transport Victoria.\n3) SA2 boundaries and population from the ABS 2021 Census.\n4) SEIFA IRSD scores from the ABS 2021 release.\nAll datasets cover Greater Melbourne."
-            },
-            {
-                keywords: ["colour", "color", "choropleth", "what do the colours mean", "map colour", "shading"],
-                answer: "The choropleth colours represent five GAI classes determined by Jenks natural breaks:\n• Very Low: 0–0.06\n• Low: 0.06–0.14\n• Moderate: 0.14–0.19\n• High: 0.19–0.32\n• Very High: 0.32–0.71\nGrey = No Data (non-residential areas). You can adjust the layer opacity using the slider in the legend."
-            },
-            {
-                keywords: ["cluster", "clustering", "bubble", "number on circle", "grouped points", "toggle cluster"],
-                answer: "When zoomed out, gym and PTV stop markers cluster together into circles showing how many features are grouped in that area. This keeps the map readable with thousands of points. Zoom in to see individual locations, or toggle clustering off using 'Cluster Points' in the legend Display Options."
-            },
-            {
-                keywords: ["no data", "grey", "gray", "missing data", "blank suburb", "why grey"],
-                answer: "Grey areas are classified as 'No Data'. These are typically non-residential SA2 zones such as Melbourne Airport, national parks, industrial areas, or water/coastal zones that lack population data or SEIFA scores. They are excluded from the analysis as they are not meaningful residential suburbs."
-            },
-            {
-                keywords: ["how to use", "how do i", "navigate", "interact", "how to interact", "toggle", "use the map"],
-                answer: "Here's how to use the map:\n• Click any suburb → view its stats in the panel (bottom right)\n• Toggle gym locations, PTV stops, suburb labels, and basemap on/off in the legend\n• Adjust opacity with the slider\n• Switch between Stats Panel and Popup mode in Display Options\n• 🗃️ Opens the full attribute table\n• 💬 Opens this assistant\n• Scroll to zoom; click and drag to pan"
-            },
-            {
-                keywords: ["why", "purpose", "reason", "research question", "what is this map for", "why was this built"],
-                answer: "This project investigates spatial inequities in gym accessibility across Greater Melbourne. Poor gym access — especially in areas with limited transport and socioeconomic disadvantage — can contribute to lower physical activity and poorer health outcomes. The map supports urban planning decisions about where gym infrastructure investment is most needed."
-            },
-            {
-                keywords: ["normalise", "normalize", "normalisation", "min max", "0 to 1", "scale"],
-                answer: "Min-max normalisation scales each metric to a 0–1 range so they can be combined meaningfully. Formula: normalised = (value − minimum) ÷ (maximum − minimum). This ensures gyms per capita, PTV density, and SEIFA score all contribute to the GAI on an equal numerical footing before the weighted sum is calculated."
-            },
-            {
-                keywords: ["population", "census", "residents", "people", "how many people"],
-                answer: "Population data comes from the ABS 2021 Census (Estimated Resident Population per SA2). It is used to calculate gyms per 10,000 residents, ensuring suburb size doesn't unfairly skew the accessibility score. Suburbs with zero or negligible population (industrial zones, airports) are excluded from the analysis."
-            },
-            {
-                keywords: ["gym", "gyms", "fitness", "how many gyms", "gym data", "fitness centre"],
-                answer: "Gym locations were sourced from OpenStreetMap using the 'leisure=fitness_centre' tag, then clipped to the Greater Melbourne SA2 boundary. The number of gyms per suburb varies significantly — some inner-city suburbs have 10+ while many outer suburbs have zero. Toggle the gym points layer in the legend to explore their distribution across Melbourne."
-            },
-            {
-                keywords: ["limitation", "limitations", "problem", "weakness", "issue", "accuracy"],
-                answer: "Key limitations include:\n1) OSM gym data may be incomplete — some private studios may be missing.\n2) SA2 is a large unit — variation within suburbs is not captured.\n3) The analysis doesn't account for gym cost, quality, or opening hours.\n4) Walking or cycling distance isn't measured — only counts within boundaries.\n5) SEIFA reflects general disadvantage, not gym-specific cost barriers."
-            },
-            {
-                keywords: ["jenks", "natural breaks", "classification", "how classified", "class breaks"],
-                answer: "Jenks Natural Breaks is a classification method that groups values by minimising variance within classes and maximising variance between them. It was applied to the ~360 SA2 GAI scores to produce five meaningful categories. This method is preferred here over equal-interval classification because the GAI data is skewed — most suburbs cluster between 0.10 and 0.25 rather than being evenly spread."
-            },
-            {
-                keywords: ["qgis", "qgis2web", "software", "tools", "built with", "technology", "open source"],
-                answer: "This map was built using an open-source GIS workflow: QGIS for spatial analysis and choropleth styling; PostGIS/PostgreSQL as the spatial database; QGIS2Web to export the map as an OpenLayers web application; and GitHub Pages to host the site. Field calculations (normalisation, GAI) were performed in the QGIS Field Calculator."
-            },
-            {
-                keywords: ["opacity", "slider", "transparent", "see through"],
-                answer: "The opacity slider in the legend controls the transparency of both the GAI choropleth layer and the SA2 boundary outlines together. Drag it left to make the layer more transparent (useful for seeing the basemap underneath) or right to make it fully opaque."
-            }
+            { keywords: ["hello","hi","hey","help","what can you","what do you know"],
+              answer: "Hi! I'm the Index Assistant for the Melbourne Gym Accessibility Index. Ask me about the GAI methodology, SEIFA, data sources, map features, or how to use the map. Try one of the suggestions below!" },
+            { keywords: ["gai","gym accessibility index","what is the index","what does gai mean","accessibility index"],
+              answer: "The Gym Accessibility Index (GAI) is a composite score (0–1) measuring how well-served each Melbourne SA2 suburb is for gym access. It combines: gym availability per 10,000 residents (50%), public transport stop density per km² (30%), and socioeconomic status via SEIFA IRSD (20%). A higher score = better accessibility." },
+            { keywords: ["calculated","how is","methodology","formula","weighted","weights","calculation","how does it work"],
+              answer: "The GAI is built in three steps:\n1) Raw metrics derived — gyms per 10,000 people, PTV stops per km², SEIFA IRSD score.\n2) Each metric normalised to 0–1: (value − min) ÷ (max − min).\n3) Weighted sum: GAI = (0.5 × gyms) + (0.3 × transport) + (0.2 × SEIFA).\nGyms carry the highest weight as the primary driver of accessibility." },
+            { keywords: ["seifa","socioeconomic","disadvantage","irsd","advantage","income","education"],
+              answer: "SEIFA (Socio-Economic Indexes for Areas) is published by the ABS. This map uses the IRSD — Index of Relative Socio-economic Disadvantage — scored from census data on income, education, employment and housing. The national average is ~1,000. Lower scores = more disadvantage. SEIFA is included because lower-income areas face cost and transport barriers to gym access beyond just physical proximity." },
+            { keywords: ["best","highest gai","most accessible","top suburb","best gym access","which suburb"],
+              answer: "Suburbs with the highest GAI scores (Very High: 0.32–0.71) are typically dense inner-city areas with high gym concentration, excellent public transport, and above-average SEIFA scores. Look for the darkest shading on the choropleth. Click any suburb to see its exact GAI score in the stats panel on the right." },
+            { keywords: ["worst","lowest gai","least accessible","poor gym","no gym","lowest score"],
+              answer: "The lowest-scoring suburbs (Very Low: 0–0.06) are generally outer fringe areas with few or no gyms, limited public transport, and sometimes lower SEIFA scores. These represent infrastructure gaps where targeted investment could improve community health outcomes. Grey areas = No Data (non-residential zones)." },
+            { keywords: ["ptv","public transport","bus","tram","train","transport stop","transit"],
+              answer: "PTV (Public Transport Victoria) stop data covers all bus, tram and train stops across Greater Melbourne. Stops are counted per km² per SA2 to create a transport density metric. Higher density = better connectivity, making gyms more reachable without a car. Toggle the PTV layer on/off in the legend." },
+            { keywords: ["sa2","statistical area","suburb boundary","abs boundaries","what is sa2"],
+              answer: "SA2 (Statistical Area Level 2) boundaries are ABS-defined geographic units roughly matching suburban communities (population 3,000–25,000). This project aggregates gym counts, PTV stops, population and SEIFA to SA2 level, enabling fair comparisons across Greater Melbourne's ~360 suburbs." },
+            { keywords: ["data source","where did","osm","openstreetmap","data come from","dataset"],
+              answer: "Four datasets were used:\n1) Gym locations — OpenStreetMap (leisure=fitness_centre tag)\n2) PTV stops — GTFS data from Public Transport Victoria\n3) SA2 boundaries & population — ABS 2021 Census\n4) SEIFA IRSD scores — ABS 2021 release\nAll datasets cover Greater Melbourne." },
+            { keywords: ["colour","color","choropleth","what do the colours","map colour","shading","legend colour"],
+              answer: "Choropleth colours represent five GAI classes from Jenks natural breaks:\n• Very Low: 0–0.06\n• Low: 0.06–0.14\n• Moderate: 0.14–0.19\n• High: 0.19–0.32\n• Very High: 0.32–0.71\nGrey = No Data. Adjust layer transparency with the opacity slider in the legend." },
+            { keywords: ["cluster","clustering","bubble","number on circle","grouped points"],
+              answer: "At lower zoom levels, gym and PTV markers cluster into circles showing how many features are grouped there. This prevents map overcrowding with thousands of points. Zoom in to see individual locations, or toggle 'Cluster Points' off in the legend." },
+            { keywords: ["no data","grey","gray","missing data","blank suburb","why grey"],
+              answer: "'No Data' grey areas are non-residential SA2 zones — airports, national parks, industrial areas, or water/coastal zones lacking population or SEIFA data. They're excluded from the analysis as they're not comparable to residential suburbs." },
+            { keywords: ["how to use","how do i","navigate","interact","toggle","use the map"],
+              answer: "How to use this map:\n• Click a suburb → stats appear in the panel (bottom right)\n• Toggle layers on/off in the legend (bottom left)\n• Adjust opacity with the slider\n• Switch Stats Panel / Popup mode in Display Options\n• 🗃️ opens the full attribute table\n• 🤖 opens this assistant\n• Scroll to zoom, click+drag to pan" },
+            { keywords: ["why","purpose","reason","research question","what is this map for"],
+              answer: "This project investigates spatial inequities in gym accessibility across Greater Melbourne. Poor gym access — especially in areas with limited transport and socioeconomic disadvantage — contributes to lower physical activity rates and poorer health outcomes. The map supports urban planning decisions about where gym infrastructure investment is most needed." },
+            { keywords: ["normalise","normalize","min max","0 to 1","scale","normalisation"],
+              answer: "Min-max normalisation scales each metric to 0–1 so they can be combined meaningfully. Formula: normalised = (value − minimum) ÷ (maximum − minimum). This ensures gyms per capita, PTV density and SEIFA all contribute equally to the GAI before weighted summing." },
+            { keywords: ["population","census","residents","people","how many people"],
+              answer: "Population data comes from the ABS 2021 Census (Estimated Resident Population per SA2). It's used to calculate gyms per 10,000 residents, normalising for suburb size. Suburbs with zero or negligible population (industrial zones, airports) are excluded." },
+            { keywords: ["gym","gyms","fitness","how many gyms","gym data"],
+              answer: "Gym locations were sourced from OpenStreetMap using the 'leisure=fitness_centre' tag, clipped to Greater Melbourne SA2 boundaries. Distribution varies significantly — inner-city suburbs can have 10+ gyms while many outer suburbs have none. Toggle the gym points layer in the legend to explore." },
+            { keywords: ["limitation","limitations","problem","weakness","accuracy","issue"],
+              answer: "Key limitations:\n1) OSM gym data may be incomplete — some private studios may be missing.\n2) SA2 is a large spatial unit — intra-suburb variation isn't captured.\n3) Gym cost, quality, and opening hours aren't considered.\n4) Walking/cycling distance to gyms isn't measured.\n5) SEIFA reflects general disadvantage, not gym-specific cost barriers." },
+            { keywords: ["jenks","natural breaks","classification","class breaks","how classified"],
+              answer: "Jenks Natural Breaks classifies values by minimising within-class variance and maximising between-class variance. Applied to ~360 SA2 GAI scores, it produces five meaningful categories. It's preferred here over equal-interval classification because GAI scores are unevenly distributed — most suburbs cluster between 0.10 and 0.25." },
+            { keywords: ["qgis","qgis2web","software","tools","built with","technology","open source"],
+              answer: "Built using an open-source GIS workflow: QGIS for spatial analysis and choropleth styling, PostGIS/PostgreSQL as the spatial database, QGIS2Web to export as an OpenLayers web app, and GitHub Pages for hosting. All field calculations (normalisation, GAI) were done in the QGIS Field Calculator." },
+            { keywords: ["opacity","slider","transparent","see through","transparency"],
+              answer: "The opacity slider in the legend controls the transparency of both the GAI choropleth and SA2 boundary lines together. Slide left for transparency (to see the basemap below) or right for full opacity." }
         ];
 
-        function getChatAnswer(userText) {
-            var text = userText.toLowerCase();
+        function getCWAnswer(text) {
+            text = text.toLowerCase();
             for (var i = 0; i < mapQA.length; i++) {
                 for (var j = 0; j < mapQA[i].keywords.length; j++) {
-                    if (text.includes(mapQA[i].keywords[j])) {
-                        return mapQA[i].answer;
-                    }
+                    if (text.includes(mapQA[i].keywords[j])) return mapQA[i].answer;
                 }
             }
-            return "I'm not sure about that one! Try asking about the GAI methodology, SEIFA, data sources, how to use the map, or which suburbs have the best or worst gym access.";
+            return "I'm not sure about that one! Try asking about the GAI methodology, SEIFA, data sources, which suburbs have the best or worst gym access, or how to use the map.";
         }
 
-        function sendChat() {
-            var input   = document.getElementById('chat-input');
-            var sendBtn = document.getElementById('chat-send-btn');
-            var text    = input.value.trim();
+        function sendCW() {
+            var input = document.getElementById('cw-input');
+            var text  = input.value.trim();
             if (!text) return;
             input.value = '';
-            input.style.height = 'auto';
-            document.getElementById('chat-chips').style.display = 'none';
-            addChatMessage(text, 'user');
-            sendBtn.disabled = true;
-            document.getElementById('chat-typing').style.display = 'block';
-            var msgBox = document.getElementById('chat-messages');
-            msgBox.scrollTop = msgBox.scrollHeight;
+            document.getElementById('cw-chips').style.display = 'none';
+            addCWMessage(text, 'user');
+            document.getElementById('cw-send-btn').disabled = true;
+            document.getElementById('cw-typing').style.display = 'block';
+            var msgs = document.getElementById('cw-messages');
+            msgs.scrollTop = msgs.scrollHeight;
             setTimeout(function () {
-                document.getElementById('chat-typing').style.display = 'none';
-                addChatMessage(getChatAnswer(text), 'bot');
-                sendBtn.disabled = false;
+                document.getElementById('cw-typing').style.display = 'none';
+                addCWMessage(getCWAnswer(text), 'bot');
+                document.getElementById('cw-send-btn').disabled = false;
                 input.focus();
             }, 700);
         }
 
-        function addChatMessage(text, who) {
-            var box = document.getElementById('chat-messages');
+        function addCWMessage(text, who) {
+            var box = document.getElementById('cw-messages');
             var el  = document.createElement('div');
             el.className   = 'chat-msg ' + who;
             el.textContent = text;
             box.appendChild(el);
-            box.scrollTop = box.scrollHeight;
+            box.scrollTop  = box.scrollHeight;
         }
 
-        function chipClick(btn) {
-            document.getElementById('chat-input').value = btn.textContent.trim();
-            sendChat();
+        function cwChip(btn) {
+            document.getElementById('cw-input').value = btn.textContent.trim();
+            sendCW();
         }
 
-        /* ═══════════════════════════════════════
-           MAP INITIALISATION
-           ═══════════════════════════════════════ */
+        /* ══════════════════════════════════
+           MAP INIT
+           ══════════════════════════════════ */
         window.addEventListener('load', function () {
             setTimeout(function () {
 
+                // Initial Melbourne view
                 if (typeof map !== 'undefined') {
-                    var melbExtent = ol.proj.transformExtent([144.3,-38.6,146.2,-37.2], 'EPSG:4326', 'EPSG:7899');
-                    map.getView().fit(melbExtent, { size: map.getSize(), padding: [70,30,80,30] });
+                    map.getView().fit(
+                        ol.proj.transformExtent([144.3,-38.6,146.2,-37.2],'EPSG:4326','EPSG:7899'),
+                        { size: map.getSize(), padding: [70,30,80,30] }
+                    );
                 }
+
+                // Thinner SA2 boundary lines
+                lyr_SA2_GM2021_2.setStyle(function () {
+                    return new ol.style.Style({
+                        stroke: new ol.style.Stroke({ color: 'rgba(0,0,0,0.45)', width: 0.4 }),
+                        fill:   new ol.style.Fill({ color: 'rgba(0,0,0,0)' })
+                    });
+                });
 
                 // Suburb labels
                 var suburbData = [
@@ -517,41 +478,34 @@
                     {name:'Cranbourne',coords:[145.2836,-38.1018]},{name:'Cheltenham',coords:[145.0515,-37.9535]},
                     {name:'Moorabbin',coords:[145.0594,-37.9289]},{name:'Pakenham',coords:[145.4871,-38.0709]}
                 ];
-
                 var labelFeatures = suburbData.map(function (s) {
-                    var coords = ol.proj.transform(s.coords, 'EPSG:4326', 'EPSG:7899');
-                    var f = new ol.Feature(new ol.geom.Point(coords));
+                    var f = new ol.Feature(new ol.geom.Point(ol.proj.transform(s.coords,'EPSG:4326','EPSG:7899')));
                     f.set('name', s.name);
                     return f;
                 });
-
                 var lyr_suburb_labels = new ol.layer.Vector({
                     source: new ol.source.Vector({ features: labelFeatures }),
                     style: function (feature) {
-                        return new ol.style.Style({
-                            text: new ol.style.Text({
-                                text: feature.get('name'),
-                                font: 'bold 11px Arial, sans-serif',
-                                fill: new ol.style.Fill({ color: 'rgba(45,45,55,0.78)' }),
-                                stroke: new ol.style.Stroke({ color: 'rgba(255,255,255,0.68)', width: 3 }),
-                                overflow: true
-                            })
-                        });
-                    },
-                    zIndex: 10
+                        return new ol.style.Style({ text: new ol.style.Text({
+                            text: feature.get('name'), font: 'bold 11px Arial, sans-serif',
+                            fill: new ol.style.Fill({ color: 'rgba(45,45,55,0.78)' }),
+                            stroke: new ol.style.Stroke({ color: 'rgba(255,255,255,0.68)', width: 3 }),
+                            overflow: true
+                        })});
+                    }, zIndex: 10
                 });
                 map.addLayer(lyr_suburb_labels);
 
                 // Layer toggles
-                document.getElementById('toggle-gyms').addEventListener('change', function () { lyr_gym_points_v2_clipped_4.setVisible(this.checked); });
-                document.getElementById('toggle-ptv').addEventListener('change', function () { lyr_ptv_stops_clipped_3.setVisible(this.checked); });
-                document.getElementById('toggle-labels').addEventListener('change', function () { lyr_suburb_labels.setVisible(this.checked); });
+                document.getElementById('toggle-gyms').addEventListener('change',    function () { lyr_gym_points_v2_clipped_4.setVisible(this.checked); });
+                document.getElementById('toggle-ptv').addEventListener('change',     function () { lyr_ptv_stops_clipped_3.setVisible(this.checked); });
+                document.getElementById('toggle-labels').addEventListener('change',  function () { lyr_suburb_labels.setVisible(this.checked); });
                 document.getElementById('toggle-basemap').addEventListener('change', function () { lyr_OSMStandard_0.setVisible(this.checked); });
 
                 document.getElementById('toggle-cluster').addEventListener('change', function () {
-                    var dist = this.checked ? 30 : 0;
-                    cluster_gym_points_v2_clipped_4.setDistance(dist);
-                    cluster_ptv_stops_clipped_3.setDistance(dist);
+                    var d = this.checked ? 30 : 0;
+                    cluster_gym_points_v2_clipped_4.setDistance(d);
+                    cluster_ptv_stops_clipped_3.setDistance(d);
                 });
 
                 document.getElementById('gai-opacity').addEventListener('input', function () {
@@ -576,6 +530,21 @@
                     document.getElementById('custom-popup').style.display = 'none';
                 });
 
+                // Legend minimise
+                document.getElementById('legend-minimise-btn').addEventListener('click', function () {
+                    var isMin = document.getElementById('legend').classList.toggle('minimised');
+                    this.textContent = isMin ? '+' : '−';
+                    this.title = isMin ? 'Expand legend' : 'Minimise legend';
+                });
+
+                // Ask AI button
+                document.getElementById('ask-ai-btn').addEventListener('click', function () {
+                    document.getElementById('chat-widget').classList.toggle('open');
+                });
+                document.getElementById('cw-close').addEventListener('click', function () {
+                    document.getElementById('chat-widget').classList.remove('open');
+                });
+
                 // Attribute table
                 document.getElementById('btn-open-table').addEventListener('click', function () {
                     document.getElementById('table-suburbs').innerHTML = buildTableHTML(extractLayerData(lyr_gyms_ptv_sa2_join_v6_withnorms_1));
@@ -595,24 +564,13 @@
                     });
                 });
 
-                // Chat modal
-                document.getElementById('btn-open-chat').addEventListener('click', function () {
-                    document.getElementById('chat-modal').style.display = 'block';
-                });
-                document.getElementById('chat-modal-close').addEventListener('click', function () {
-                    document.getElementById('chat-modal').style.display = 'none';
-                });
-
                 // Map click
                 if (typeof map !== 'undefined') {
                     map.on('singleclick', function (evt) {
                         var found = false;
                         map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
                             if (found) return;
-                            var cf    = feature.get('features');
-                            var f     = cf ? cf[0] : feature;
-                            var count = cf ? cf.length : 1;
-
+                            var cf = feature.get('features'), f = cf ? cf[0] : feature, count = cf ? cf.length : 1;
                             if (layer === lyr_gym_points_v2_clipped_4) {
                                 showPopup(count > 1 ? '🏋️ Gym Cluster' : '🏋️ ' + (f.get('name') || 'Unnamed Gym'),
                                     count > 1 ? [['Gyms in area', count]] : [], evt.pixel);
@@ -649,76 +607,56 @@
             }, 600);
         });
 
-        /* ═══════════════ UTILITY FUNCTIONS ═══════════════ */
+        /* ══ Utility functions ══ */
         function extractLayerData(layer) {
             if (!layer) return [];
-            var features = layer.getSource().getFeatures();
-            var dataList = [];
-            features.forEach(function (f) {
-                if (f.get('features')) {
-                    f.get('features').forEach(function (sf) { dataList.push(sf.getProperties()); });
-                } else {
-                    dataList.push(f.getProperties());
-                }
+            var data = [];
+            layer.getSource().getFeatures().forEach(function (f) {
+                if (f.get('features')) f.get('features').forEach(function (sf) { data.push(sf.getProperties()); });
+                else data.push(f.getProperties());
             });
-            return dataList;
+            return data;
         }
 
         function buildTableHTML(data) {
-            if (!data || data.length === 0) return '<tr><td style="padding:15px;text-align:center;">No data available.</td></tr>';
+            if (!data || !data.length) return '<tr><td style="padding:15px;text-align:center;">No data.</td></tr>';
             var keys = new Set();
             data.forEach(function (item) { Object.keys(item).forEach(function (k) { if (k !== 'geometry' && k !== 'features') keys.add(k); }); });
             var cols = Array.from(keys);
-            var html = '<thead><tr>';
-            cols.forEach(function (col, index) { html += '<th onclick="sortTable(this,' + index + ')">' + col + ' <span></span></th>'; });
-            html += '</tr></thead><tbody>';
+            var html = '<thead><tr>' + cols.map(function (c, i) { return '<th onclick="sortTable(this,' + i + ')">' + c + ' <span></span></th>'; }).join('') + '</tr></thead><tbody>';
             data.forEach(function (item) {
-                html += '<tr>';
-                cols.forEach(function (col) {
-                    var val = item[col];
-                    if (val === null || val === undefined) val = '';
-                    else if (typeof val === 'number') val = (val % 1 !== 0) ? val.toFixed(4) : val;
-                    html += '<td>' + val + '</td>';
-                });
-                html += '</tr>';
+                html += '<tr>' + cols.map(function (c) {
+                    var v = item[c]; if (v == null) v = ''; else if (typeof v === 'number') v = v % 1 !== 0 ? v.toFixed(4) : v;
+                    return '<td>' + v + '</td>';
+                }).join('') + '</tr>';
             });
-            html += '</tbody>';
-            return html;
+            return html + '</tbody>';
         }
 
-        window.sortTable = function (th, colIndex) {
-            var table = th.closest('table');
-            var tbody = table.querySelector('tbody');
+        window.sortTable = function (th, ci) {
+            var tbody = th.closest('table').querySelector('tbody');
             if (!tbody) return;
-            var rows  = Array.from(tbody.querySelectorAll('tr'));
-            var isAsc = th.classList.contains('asc');
-            table.querySelectorAll('th').forEach(function (h) { h.classList.remove('asc','desc'); h.querySelector('span').innerHTML = ''; });
-            th.classList.toggle('asc', !isAsc);
-            th.classList.toggle('desc', isAsc);
-            th.querySelector('span').innerHTML = isAsc ? '▼' : '▲';
+            var rows = Array.from(tbody.querySelectorAll('tr')), asc = th.classList.contains('asc');
+            th.closest('table').querySelectorAll('th').forEach(function (h) { h.classList.remove('asc','desc'); h.querySelector('span').innerHTML = ''; });
+            th.classList.toggle('asc', !asc); th.classList.toggle('desc', asc);
+            th.querySelector('span').innerHTML = asc ? '▼' : '▲';
             rows.sort(function (a, b) {
-                var cellA = a.children[colIndex].textContent.trim();
-                var cellB = b.children[colIndex].textContent.trim();
-                var numA  = parseFloat(cellA), numB = parseFloat(cellB);
-                if (!isNaN(numA) && !isNaN(numB)) return isAsc ? numB - numA : numA - numB;
-                return isAsc ? cellB.localeCompare(cellA) : cellA.localeCompare(cellB);
+                var ca = a.children[ci].textContent.trim(), cb = b.children[ci].textContent.trim();
+                var na = parseFloat(ca), nb = parseFloat(cb);
+                return !isNaN(na) && !isNaN(nb) ? (asc ? nb - na : na - nb) : (asc ? cb.localeCompare(ca) : ca.localeCompare(cb));
             });
-            rows.forEach(function (row) { tbody.appendChild(row); });
+            rows.forEach(function (r) { tbody.appendChild(r); });
         };
 
         function showPopup(title, rows, pixel) {
-            var popup = document.getElementById('custom-popup');
-            var mapEl = document.getElementById('map');
+            var popup = document.getElementById('custom-popup'), mapEl = document.getElementById('map');
             document.getElementById('custom-popup-title').textContent = title;
-            var html = '';
-            rows.forEach(function (row) { html += '<tr><th>' + row[0] + '</th><td>' + row[1] + '</td></tr>'; });
-            document.getElementById('custom-popup-table').innerHTML = html;
+            document.getElementById('custom-popup-table').innerHTML = rows.map(function (r) { return '<tr><th>' + r[0] + '</th><td>' + r[1] + '</td></tr>'; }).join('');
             popup.style.display = 'block';
             var x = pixel[0] + 12, y = pixel[1] - 12;
             if (x + popup.offsetWidth  > mapEl.offsetWidth  - 10) x = pixel[0] - popup.offsetWidth  - 12;
             if (y + popup.offsetHeight > mapEl.offsetHeight - 10) y = pixel[1] - popup.offsetHeight - 12;
-            popup.style.left = x + 'px';
-            popup.style.top  = y + 'px';
+            popup.style.left = x + 'px'; popup.style.top = y + 'px';
         }
 
         function showStatsBanner(name, area, pop, seifa, ptv, gyms, gai) {
