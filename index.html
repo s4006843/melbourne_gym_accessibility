@@ -93,11 +93,28 @@
         #custom-popup-body th { text-align: left; color: #666; font-weight: normal; padding: 5px 0; width: 55%; }
         #custom-popup-body td { text-align: right; font-weight: bold; color: #222; padding: 5px 0; }
 
+        /* ── Right-side panel stack (Ask AI + Stats, always in order) ── */
+        #right-panel {
+            position: fixed; bottom: 28px; right: 14px;
+            display: flex; flex-direction: column; align-items: stretch;
+            gap: 10px; z-index: 1600; width: 260px;
+        }
+
+        /* ── Ask AI button ── */
+        #ask-ai-btn {
+            background: #143c78; color: white; border: none;
+            border-radius: 24px; padding: 11px 18px;
+            font-family: Arial, sans-serif; font-size: 14px; font-weight: bold;
+            cursor: pointer; width: 100%;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+        }
+        #ask-ai-btn:hover { background: #0f2d5e; }
+
         /* Stats panel */
         #stats-banner {
-            position: fixed; bottom: 28px; right: 14px; width: 260px;
-            background: rgba(20,60,120,0.92); color: white; padding: 16px;
-            border-radius: 10px; z-index: 1500; display: flex; flex-direction: column;
+            width: 100%; background: rgba(20,60,120,0.92); color: white; padding: 16px;
+            border-radius: 10px; display: flex; flex-direction: column;
             box-shadow: 0 5px 20px rgba(0,0,0,0.35); font-family: Arial, sans-serif;
         }
         #stats-banner.hidden { display: none; }
@@ -136,21 +153,9 @@
         .data-table tr:nth-child(even) { background: #fafbfc; }
         .data-table tr:hover { background: #f0f7ff; }
 
-        /* ── Floating Ask AI button ── */
-        #ask-ai-btn {
-            position: fixed; bottom: 28px; right: 290px;
-            background: #143c78; color: white; border: none;
-            border-radius: 24px; padding: 11px 18px;
-            font-family: Arial, sans-serif; font-size: 14px; font-weight: bold;
-            cursor: pointer; z-index: 1600;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.35);
-            display: flex; align-items: center; gap: 7px;
-        }
-        #ask-ai-btn:hover { background: #0f2d5e; }
-
-        /* ── Chat widget (pops up above Ask AI button) ── */
+        /* ── Chat widget (anchored above right-panel) ── */
         #chat-widget {
-            display: none; position: fixed; bottom: 80px; right: 290px;
+            display: none; position: fixed; bottom: 28px; right: 290px;
             width: 360px; height: 460px; background: white;
             border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
             z-index: 1600; flex-direction: column; overflow: hidden;
@@ -234,27 +239,27 @@
             </div>
         </div>
 
-        <!-- Stats panel -->
-        <div id="stats-banner">
-            <div id="stats-placeholder">📍 Select a suburb on the map to view its statistics</div>
-            <div id="stats-data">
-                <div id="stats-header-row">
-                    <div id="stats-suburb-name">—</div>
-                    <div id="stats-banner-close">×</div>
-                </div>
-                <div id="stats-cards">
-                    <div class="stat-card"><div class="stat-label">Area (km²)</div><div class="stat-value" id="stat-area">—</div></div>
-                    <div class="stat-card"><div class="stat-label">Population</div><div class="stat-value" id="stat-pop">—</div></div>
-                    <div class="stat-card"><div class="stat-label">SEIFA Score</div><div class="stat-value" id="stat-seifa">—</div></div>
-                    <div class="stat-card"><div class="stat-label">PTV Stops</div><div class="stat-value" id="stat-ptv">—</div></div>
-                    <div class="stat-card"><div class="stat-label">Gym Count</div><div class="stat-value" id="stat-gyms">—</div></div>
-                    <div class="stat-card"><div class="stat-label">GAI Score</div><div class="stat-value" id="stat-gai">—</div></div>
+        <!-- Right-side panel stack: Ask AI always above Stats -->
+        <div id="right-panel">
+            <button id="ask-ai-btn">🤖 Ask AI</button>
+            <div id="stats-banner">
+                <div id="stats-placeholder">📍 Select a suburb on the map to view its statistics</div>
+                <div id="stats-data">
+                    <div id="stats-header-row">
+                        <div id="stats-suburb-name">—</div>
+                        <div id="stats-banner-close">×</div>
+                    </div>
+                    <div id="stats-cards">
+                        <div class="stat-card"><div class="stat-label">Area (km²)</div><div class="stat-value" id="stat-area">—</div></div>
+                        <div class="stat-card"><div class="stat-label">Population</div><div class="stat-value" id="stat-pop">—</div></div>
+                        <div class="stat-card"><div class="stat-label">SEIFA Score</div><div class="stat-value" id="stat-seifa">—</div></div>
+                        <div class="stat-card"><div class="stat-label">PTV Stops</div><div class="stat-value" id="stat-ptv">—</div></div>
+                        <div class="stat-card"><div class="stat-label">Gym Count</div><div class="stat-value" id="stat-gyms">—</div></div>
+                        <div class="stat-card"><div class="stat-label">GAI Score</div><div class="stat-value" id="stat-gai">—</div></div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Floating Ask AI button -->
-        <button id="ask-ai-btn">🤖 Ask AI</button>
 
         <!-- Chat widget -->
         <div id="chat-widget">
@@ -270,10 +275,10 @@
             </div>
             <div id="cw-chips">
                 <div class="chips-label">Try asking</div>
-                <button class="chip" onclick="cwChip(this)">Which suburb has the best gym access?</button>
-                <button class="chip" onclick="cwChip(this)">What does SEIFA mean?</button>
+                <button class="chip" onclick="cwChip(this)">Which suburbs have the best gym access?</button>
+                <button class="chip" onclick="cwChip(this)">Which suburbs have the worst gym access?</button>
+                <button class="chip" onclick="cwChip(this)">How does the map work?</button>
                 <button class="chip" onclick="cwChip(this)">How is the GAI score calculated?</button>
-                <button class="chip" onclick="cwChip(this)">What data sources were used?</button>
                 <button class="chip" onclick="cwChip(this)">What are the limitations of this analysis?</button>
             </div>
             <div id="cw-input-row">
@@ -355,14 +360,16 @@
               answer: "Hi! I'm the Index Assistant for the Melbourne Gym Accessibility Index. Ask me about the GAI methodology, SEIFA, data sources, map features, or how to use the map. Try one of the suggestions below!" },
             { keywords: ["gai","gym accessibility index","what is the index","what does gai mean","accessibility index"],
               answer: "The Gym Accessibility Index (GAI) is a composite score (0–1) measuring how well-served each Melbourne SA2 suburb is for gym access. It combines: gym availability per 10,000 residents (50%), public transport stop density per km² (30%), and socioeconomic status via SEIFA IRSD (20%). A higher score = better accessibility." },
-            { keywords: ["calculated","how is","methodology","formula","weighted","weights","calculation","how does it work"],
+            { keywords: ["calculated","how is","methodology","formula","weighted","weights","calculation"],
               answer: "The GAI is built in three steps:\n1) Raw metrics derived — gyms per 10,000 people, PTV stops per km², SEIFA IRSD score.\n2) Each metric normalised to 0–1: (value − min) ÷ (max − min).\n3) Weighted sum: GAI = (0.5 × gyms) + (0.3 × transport) + (0.2 × SEIFA).\nGyms carry the highest weight as the primary driver of accessibility." },
+            { keywords: ["how does the map work","how do i use","how to use","navigate","interact","toggle","use the map","map work","does this map work"],
+              answer: "Here's how to use the map:\n• Click any suburb to see its stats in the panel on the bottom right\n• Toggle layers on/off using the checkboxes in the legend (bottom left)\n• Adjust choropleth transparency with the opacity slider\n• Switch between Stats Panel and Popup mode under Display Options\n• 🗃️ opens the full attribute table for all layers\n• 🤖 opens this assistant\n• Scroll to zoom, click and drag to pan\n• Zoom in to see individual gym and PTV stop markers" },
             { keywords: ["seifa","socioeconomic","disadvantage","irsd","advantage","income","education"],
               answer: "SEIFA (Socio-Economic Indexes for Areas) is published by the ABS. This map uses the IRSD — Index of Relative Socio-economic Disadvantage — scored from census data on income, education, employment and housing. The national average is ~1,000. Lower scores = more disadvantage. SEIFA is included because lower-income areas face cost and transport barriers to gym access beyond just physical proximity." },
-            { keywords: ["best","highest gai","most accessible","top suburb","best gym access","which suburb"],
-              answer: "Suburbs with the highest GAI scores (Very High: 0.32–0.71) are typically dense inner-city areas with high gym concentration, excellent public transport, and above-average SEIFA scores. Look for the darkest shading on the choropleth. Click any suburb to see its exact GAI score in the stats panel on the right." },
-            { keywords: ["worst","lowest gai","least accessible","poor gym","no gym","lowest score"],
-              answer: "The lowest-scoring suburbs (Very Low: 0–0.06) are generally outer fringe areas with few or no gyms, limited public transport, and sometimes lower SEIFA scores. These represent infrastructure gaps where targeted investment could improve community health outcomes. Grey areas = No Data (non-residential zones)." },
+            { keywords: ["best","highest gai","most accessible","top suburb","best gym access","which suburb","suburbs have the best","best access"],
+              answer: "Suburbs with the highest GAI scores (Very High: 0.32–0.71) are typically dense inner-city areas with high gym concentration, excellent public transport, and above-average SEIFA scores. These include areas like Melbourne CBD, Carlton, Fitzroy, South Yarra, and Richmond. On the map, look for the darkest-coloured suburbs. Click any suburb to see its exact GAI score in the stats panel." },
+            { keywords: ["worst","lowest gai","least accessible","poor gym","no gym","lowest score","worst gym","suburbs have the worst","worst access"],
+              answer: "The lowest-scoring suburbs (Very Low: 0–0.06) are generally outer fringe or peri-urban areas with few or no gyms, limited public transport, and sometimes lower SEIFA scores — places like Melton, Pakenham, Cranbourne outer areas, and parts of Werribee. These represent infrastructure gaps where targeted investment could most improve community health outcomes. Grey areas indicate No Data (non-residential zones like airports or industrial areas)." },
             { keywords: ["ptv","public transport","bus","tram","train","transport stop","transit"],
               answer: "PTV (Public Transport Victoria) stop data covers all bus, tram and train stops across Greater Melbourne. Stops are counted per km² per SA2 to create a transport density metric. Higher density = better connectivity, making gyms more reachable without a car. Toggle the PTV layer on/off in the legend." },
             { keywords: ["sa2","statistical area","suburb boundary","abs boundaries","what is sa2"],
@@ -375,8 +382,6 @@
               answer: "At lower zoom levels, gym and PTV markers cluster into circles showing how many features are grouped there. This prevents map overcrowding with thousands of points. Zoom in to see individual locations, or toggle 'Cluster Points' off in the legend." },
             { keywords: ["no data","grey","gray","missing data","blank suburb","why grey"],
               answer: "'No Data' grey areas are non-residential SA2 zones — airports, national parks, industrial areas, or water/coastal zones lacking population or SEIFA data. They're excluded from the analysis as they're not comparable to residential suburbs." },
-            { keywords: ["how to use","how do i","navigate","interact","toggle","use the map"],
-              answer: "How to use this map:\n• Click a suburb → stats appear in the panel (bottom right)\n• Toggle layers on/off in the legend (bottom left)\n• Adjust opacity with the slider\n• Switch Stats Panel / Popup mode in Display Options\n• 🗃️ opens the full attribute table\n• 🤖 opens this assistant\n• Scroll to zoom, click+drag to pan" },
             { keywords: ["why","purpose","reason","research question","what is this map for"],
               answer: "This project investigates spatial inequities in gym accessibility across Greater Melbourne. Poor gym access — especially in areas with limited transport and socioeconomic disadvantage — contributes to lower physical activity rates and poorer health outcomes. The map supports urban planning decisions about where gym infrastructure investment is most needed." },
             { keywords: ["normalise","normalize","min max","0 to 1","scale","normalisation"],
@@ -392,7 +397,9 @@
             { keywords: ["qgis","qgis2web","software","tools","built with","technology","open source"],
               answer: "Built using an open-source GIS workflow: QGIS for spatial analysis and choropleth styling, PostGIS/PostgreSQL as the spatial database, QGIS2Web to export as an OpenLayers web app, and GitHub Pages for hosting. All field calculations (normalisation, GAI) were done in the QGIS Field Calculator." },
             { keywords: ["opacity","slider","transparent","see through","transparency"],
-              answer: "The opacity slider in the legend controls the transparency of both the GAI choropleth and SA2 boundary lines together. Slide left for transparency (to see the basemap below) or right for full opacity." }
+              answer: "The opacity slider in the legend controls the transparency of both the GAI choropleth and SA2 boundary lines together. Slide left for transparency (to see the basemap below) or right for full opacity." },
+            { keywords: ["what does seifa mean","what does gai stand for","what does ptv","acronym","abbreviation","stand for"],
+              answer: "Key acronyms used in this map:\n• GAI — Gym Accessibility Index (the composite score)\n• SEIFA — Socio-Economic Indexes for Areas (ABS)\n• IRSD — Index of Relative Socio-economic Disadvantage\n• PTV — Public Transport Victoria\n• SA2 — Statistical Area Level 2 (ABS geography)\n• OSM — OpenStreetMap\n• ABS — Australian Bureau of Statistics" }
         ];
 
         function getCWAnswer(text) {
